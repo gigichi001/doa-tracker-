@@ -153,9 +153,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
     </nav>
     <div class="suser"><strong id="suname">—</strong><span id="suemail"></span></div>
       <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.1)">
-      <button onclick="clearAllData()" style="width:100%;padding:7px;background:rgba(122,30,30,.7);border:none;border-radius:6px;color:#fff;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;font-weight:500">
-        🗑 Clear all my data
-      </button>
+      <button onclick="clearAllData()" style="width:100%;padding:7px;background:rgba(122,30,30,.7);border:none;border-radius:6px;color:#fff;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;font-weight:500">🗑 Clear all my data</button>
       <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;text-align:center">Removes all saved requests & login</div>
     </div>
   </aside>
@@ -1388,7 +1386,7 @@ function save(){localStorage.setItem('doa_reqs',JSON.stringify(reqs))}
 function tc(t){if(t==='Approval'||t==='Multiple Approval')return 'bb';if(t==='Scope Approval')return 'bp';if(t==='Inform'||t==='Scope Inform')return 'bgr';return 'bw'}
 function getCon(role,country){if(country){const c=CONS.find(x=>x.r===role&&x.co===country);if(c)return c}return CONS.find(x=>x.r===role)||{n:role,e:'unknown@benline.com'}}
 function getActiveLv(req){
-  const lvs=[...new Set(req.apvs.filter(a=>isApv(a.t)).map(a=>a.lv))].sort((a,b)=>a-b);
+  const lvs=[...new Set(req.apvs.filter(a=>isApv(a.t)).map(a=>a.lv))].sort((a,b)=>b-a);
   for(const lv of lvs){const at=req.apvs.filter(a=>a.lv===lv&&isApv(a.t));if(!at.every(a=>a.st==='Approved'||a.st==='Rejected'))return lv}
   return null
 }
@@ -1454,7 +1452,7 @@ function onSub(){
   const byLv={};rules.forEach(r=>{byLv[r.lv]=byLv[r.lv]||[];byLv[r.lv].push(r)});
   const lvN={1:'Level 1 — Board',2:'Level 2 — Executive',3:'Level 3 — Product (MAS/Liner)',4:'Level 4 — Functions',5:'Level 5 — Country'};
   let html='',ti=0;
-  Object.keys(byLv).sort().forEach(lv=>{
+  Object.keys(byLv).sort((a,b)=>b-a).forEach(lv=>{
     const rows=byLv[lv],hasA=rows.some(r=>isApv(r.t));
     html+=`<div class="lg"><div class="ll"><span class="badge bgr" style="font-size:9px">L${lv}</span>${lvN[lv]||'Level '+lv} ${hasA?'<span class="badge bb" style="font-size:8px">APPROVAL REQUIRED</span>':'<span class="badge bw" style="font-size:8px">INFORM ONLY</span>'}</div>`;
     rows.forEach(r=>{
@@ -1535,7 +1533,7 @@ function openModal(id){
   const alv=getActiveLv(r);
   const byLv={};r.apvs.forEach(a=>{byLv[a.lv]=byLv[a.lv]||[];byLv[a.lv].push(a)});
   const lvN={1:'Board',2:'Executive',3:'Product — MAS/Liner',4:'Functions',5:'Country'};
-  const apvLvs=[...new Set(r.apvs.filter(a=>isApv(a.t)).map(a=>a.lv))].sort((a,b)=>a-b);
+  const apvLvs=[...new Set(r.apvs.filter(a=>isApv(a.t)).map(a=>a.lv))].sort((a,b)=>b-a);
   const seqH=apvLvs.map((lv,i)=>{
     const at=r.apvs.filter(a=>a.lv===lv&&isApv(a.t));
     const dn=at.every(a=>a.st==='Approved'),rj=at.some(a=>a.st==='Rejected');
@@ -1545,24 +1543,24 @@ function openModal(id){
   const isSubmitter2=r.sb===me?.n||r.se===me?.e;
   const sendBtn='';
   let lvH='';
-  Object.keys(byLv).sort().forEach(lv=>{
+  Object.keys(byLv).sort((a,b)=>b-a).forEach(lv=>{
     const rows=byLv[lv],lvN2=parseInt(lv);
     const apR=rows.filter(a=>isApv(a.t)),inR=rows.filter(a=>isInf(a.t));
     const isSubmitter=r.sb===me?.n||r.se===me?.e;
-    const isLk=apvLvs.includes(lvN2)&&alv!==null&&lvN2>alv;
+    const isLk=apvLvs.includes(lvN2)&&alv!==null&&lvN2<alv;
     const isAct=apR.length>0&&(r.status==='In Progress'||r.status==='Rejected')&&!isLk;
     const lvDn=apR.length&&apR.every(a=>a.st==='Approved'||a.st==='Rejected');
     const lvRj=apR.some(a=>a.st==='Rejected');
     if(apR.length){
-      lvH+=`<div class="ml"><div class="mlh"><span class="badge ${lvRj?'br':lvDn?'bg':isAct?'bw':'bgr'}" style="font-size:9px">L${lv}</span>${lvN[lv]||'L'+lv}${isLk?` <span style="font-size:9px;color:var(--tx3)">🔒 Locked — Level ${lvN2-1} must complete first</span>`:''}${isAct&&!lvDn?' <span style="font-size:9px;color:var(--am)">▶ Active — send emails now</span>':''}</div>`;
+      lvH+=`<div class="ml"><div class="mlh"><span class="badge ${lvRj?'br':lvDn?'bg':isAct?'bw':'bgr'}" style="font-size:9px">L${lv}</span>${lvN[lv]||'L'+lv}${isLk?` <span style="font-size:9px;color:var(--tx3)">🔒 Locked — Level ${lvN2+1} must complete first</span>`:''}${isAct&&!lvDn?' <span style="font-size:9px;color:var(--am)">▶ Active — send emails now</span>':''}</div>`;
       apR.forEach(a=>{
         const sc=a.st==='Approved'?'bg':a.st==='Rejected'?'br':a.st==='Blocked'?'bgr':a.st==='Email Sent'?'bt':'bgr';
-        lvH+=`<div class="ma"><div class="mal"><div class="man">${a.r}${a.n&&a.n!==a.r?` <span style="color:var(--tx3);font-size:10px;font-weight:400">(${a.n})</span>`:''}</div><div class="mae">✉ ${a.re}</div>${a.cm?`<div style="font-size:10px;color:var(--tx2);font-style:italic;margin-top:2px">"${a.cm}"</div>`:''}</div><div class="maa"><span class="badge ${sc}">${a.st}</span>${(isAct||isSubmitter)&&alv===lvN2&&r.status==='In Progress'&&a.st==='Pending'?`<button class="btn btn-em" onclick="sendOne('${id}','${a.r}')">✉ Send</button>`:''} ${a.st==='Email Sent'&&r.status==='In Progress'?`<button class="btn" style="padding:3px 8px;font-size:10px;border-color:#7a4f00;color:var(--am)" onclick="sendReminder('${id}','${a.r}')">↩ Remind</button>`:''}${isAct?`
-        <button class="btn btn-ok btn-sm ${a.st==='Approved'?'selected':''} ${lvRj&&a.st!=='Rejected'?'btn-dim':''}"
+        lvH+=`<div class="ma"><div class="mal"><div class="man">${a.r}${a.n&&a.n!==a.r?` <span style="color:var(--tx3);font-size:10px;font-weight:400">(${a.n})</span>`:''}</div><div class="mae">✉ ${a.re}</div>${a.cm?`<div style="font-size:10px;color:var(--tx2);font-style:italic;margin-top:2px">"${a.cm}"</div>`:''}</div><div class="maa"><span class="badge ${sc}">${a.st}</span>${(isAct||isSubmitter)&&alv===lvN2&&r.status==='In Progress'&&a.st==='Pending'?`<button class="btn btn-em" onclick="sendOne('${id}','${a.r}')">✉ Send</button>`:''} ${a.st==='Email Sent'&&r.status==='In Progress'&&a.st!=='Blocked'?`<button class="btn" style="padding:3px 8px;font-size:10px;border-color:#7a4f00;color:var(--am)" onclick="sendReminder('${id}','${a.r}')">↩ Remind</button>`:''}${isAct&&a.st!=='Blocked'?`
+        <button class="btn btn-ok btn-sm ${a.st==='Approved'?'selected':''}"
           onclick="decide('${id}','${a.r}','Approved')" style="padding:3px 9px;font-size:10px">
           ${a.st==='Approved'?'✓ Approved':'✓ Approve'}
         </button>
-        <button class="btn btn-no btn-sm ${a.st==='Rejected'?'selected':''} ${lvRj&&a.st!=='Rejected'?'btn-dim':''}"
+        <button class="btn btn-no btn-sm ${a.st==='Rejected'?'selected':''}"
           onclick="decide('${id}','${a.r}','Rejected')" style="padding:3px 9px;font-size:10px">
           ${a.st==='Rejected'?'✗ Rejected':'✗ Reject'}
         </button>
@@ -1571,7 +1569,7 @@ function openModal(id){
       lvH+='</div>';
     }
     inR.forEach(a=>{
-      lvH+=`<div class="minf"><span class="badge bw" style="font-size:9px;margin-right:5px">${a.t}</span><span style="font-size:9px;color:var(--tx3)">— notify only, no approval needed</span> <strong>${a.r}</strong>${a.n&&a.n!==a.r?` (${a.n})`:''} <span style="color:var(--tx3);font-size:10px">· ✉ ${a.re}</span> ${a.st==='Pending'?`<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>`:'<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>'}</div>`;
+      lvH+=`<div class="minf"><span class="badge bgr" style="font-size:9px;margin-right:5px">L${lv}</span><span class="badge bw" style="font-size:9px;margin-right:5px">${a.t}</span><span style="font-size:9px;color:var(--tx3)">— notify only, no approval needed</span> <strong>${a.r}</strong>${a.n&&a.n!==a.r?` (${a.n})`:''} <span style="color:var(--tx3);font-size:10px">· ✉ ${a.re}</span> ${a.st==='Pending'&&r.status!=='Rejected'?`<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>`:'<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>'}</div>`;
     });
   });
   const thrH=r.notes.map(nt=>`<div class="tm"><div class="tav">${ini(nt.f)}</div><div class="tb ${nt.f===me?.n?'mine':''}"><div class="tw">${nt.f}</div><div class="tt">${nt.x}</div><div class="ti">${nt.at}</div></div></div>`).join('')||'<div style="font-size:11px;color:var(--tx3)">No notes yet.</div>';
@@ -1626,7 +1624,7 @@ function decide(reqId,role,dec){
   // Allow toggling: if already set to this decision, undo it back to Email Sent
   if(a.st===dec){
     // Undo: clear this decision
-    a.st='Email Sent';a.cm='';a.at=null;
+    a.st='Pending';a.cm='';a.at=null;
     // If undoing a rejection, restore all Blocked approvers to Email Sent and restore request status
     if(dec==='Rejected'){
       r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Pending';});
@@ -1733,12 +1731,7 @@ ${r.sb}`);
   r.notes.push({f:'System',x:`Reminder sent to ${a.r}`,at:now()});
   save();renderAll();openModal(reqId);showT('Reminder sent to '+a.r);
 }
-
-function clearAllData(){
-  if(!confirm("This will delete ALL your saved requests and log you out. Are you sure?"))return;
-  localStorage.clear();
-  location.reload();
-}
+function clearAllData(){if(!confirm("This will delete ALL your saved requests and log you out. Are you sure?"))return;localStorage.clear();location.reload();}
 </script>
 </body>
 </html>
