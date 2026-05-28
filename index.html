@@ -275,8 +275,11 @@ const IS_ONLINE = true;
 async function apiCall(params){
   try{
     const url=API+'?'+new URLSearchParams(params).toString();
-    const res=await fetch(url);
-    return await res.json();
+    const res=await fetch(url,{redirect:'follow'});
+    const text=await res.text();
+    const json=JSON.parse(text);
+    if(json.ok===false){console.error('API error:',json.error);return null;}
+    return json.data!==undefined?json.data:json;
   }catch(e){console.error('API error:',e);return null;}
 }
 
