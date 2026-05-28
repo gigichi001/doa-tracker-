@@ -272,55 +272,64 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
 const API = 'https://script.google.com/macros/s/AKfycbz9HKajT55R-rKB1RESgtZyUUaGBp3aJu3mYWz0wu3c8-cj8z-cmU4aELgI77iOSLtG/exec';
 const IS_ONLINE = true;
 
-function apiCall(params){
-  return new Promise((resolve)=>{
-    const cbName='cb'+Date.now();
-    params.callback=cbName;
-    const url=API+'?'+new URLSearchParams(params).toString();
-    window[cbName]=function(data){
-      delete window[cbName];
-      document.getElementById('jsonp-'+cbName)?.remove();
-      if(data&&data.ok===false){console.error('API:',data.error);resolve(null);return;}
-      resolve(data&&data.data!==undefined?data.data:data);
+// Use no-cors fetch for write operations (fire and forget)
+// Use JSONP for read operations
+function apiRead(params) {
+  return new Promise((resolve) => {
+    const cbName = 'cb' + Date.now() + Math.floor(Math.random()*1000);
+    params.callback = cbName;
+    const url = API + '?' + new URLSearchParams(params).toString();
+    window[cbName] = function(data) {
+      try { delete window[cbName]; document.getElementById('_s_'+cbName)?.remove(); } catch(e) {}
+      resolve(data && data.data !== undefined ? data.data : (data || []));
     };
-    const s=document.createElement('script');
-    s.id='jsonp-'+cbName;
-    s.src=url;
-    s.onerror=()=>{delete window[cbName];s.remove();resolve(null);};
+    const s = document.createElement('script');
+    s.id = '_s_' + cbName;
+    s.src = url;
+    s.onerror = () => { try { delete window[cbName]; s.remove(); } catch(e) {} resolve([]); };
     document.head.appendChild(s);
-    setTimeout(()=>{if(window[cbName]){delete window[cbName];s.remove();resolve(null);}},8000);
+    setTimeout(() => { if(window[cbName]) { delete window[cbName]; try{document.getElementById('_s_'+cbName)?.remove();}catch(e){} resolve([]); } }, 10000);
   });
 }
 
-async function loadRequests(){
-  if(!IS_ONLINE)return JSON.parse(localStorage.getItem('doa_reqs')||'[]');
+// Write using no-cors (fire and forget — GAS accepts it, just cant read response)
+function apiWrite(params) {
+  if (!IS_ONLINE) return Promise.resolve();
+  const url = API + '?' + new URLSearchParams(params).toString();
+  return fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+}
+
+async function loadRequests() {
+  if (!IS_ONLINE) return JSON.parse(localStorage.getItem('doa_reqs')||'[]');
   showSync('loading');
-  const data=await apiCall({action:'getAll'});
+  try {
+    const data = await apiRead({ action: 'getAll' });
+    hideSync();
+    if (Array.isArray(data) && data.length >= 0) {
+      localStorage.setItem('doa_reqs', JSON.stringify(data));
+      return data;
+    }
+  } catch(e) {}
   hideSync();
-  if(!data||data.error){showSync('error');return JSON.parse(localStorage.getItem('doa_reqs')||'[]');}
-  localStorage.setItem('doa_reqs',JSON.stringify(data));
-  return data;
+  return JSON.parse(localStorage.getItem('doa_reqs')||'[]');
 }
 
-async function saveReq(req){
-  const local=JSON.parse(localStorage.getItem('doa_reqs')||'[]');
-  const idx=local.findIndex(x=>x.id===req.id);
-  if(idx>=0)local[idx]=req;else local.unshift(req);
-  localStorage.setItem('doa_reqs',JSON.stringify(local));
-  if(!IS_ONLINE)return;
+async function saveReq(req) {
+  const local = JSON.parse(localStorage.getItem('doa_reqs')||'[]');
+  const idx = local.findIndex(x => x.id === req.id);
+  if (idx >= 0) local[idx] = req; else local.unshift(req);
+  localStorage.setItem('doa_reqs', JSON.stringify(local));
+  if (!IS_ONLINE) return;
   showSync('saving');
-  const res=await apiCall({action:'save',data:JSON.stringify(req)});
+  await apiWrite({ action: 'save', data: encodeURIComponent(JSON.stringify(req)) });
   hideSync();
-  if(!res||res.error)showSync('error');
 }
 
-async function delReq(id){
-  const local=JSON.parse(localStorage.getItem('doa_reqs')||'[]');
-  localStorage.setItem('doa_reqs',JSON.stringify(local.filter(x=>x.id!==id)));
-  if(!IS_ONLINE)return;
-  showSync('saving');
-  await apiCall({action:'delete',id});
-  hideSync();
+async function delReq(id) {
+  const local = JSON.parse(localStorage.getItem('doa_reqs')||'[]');
+  localStorage.setItem('doa_reqs', JSON.stringify(local.filter(x => x.id !== id)));
+  if (!IS_ONLINE) return;
+  await apiWrite({ action: 'delete', id: id });
 }
 
 function showSync(s){
