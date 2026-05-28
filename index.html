@@ -272,15 +272,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
 const API = 'https://script.google.com/macros/s/AKfycbz9HKajT55R-rKB1RESgtZyUUaGBp3aJu3mYWz0wu3c8-cj8z-cmU4aELgI77iOSLtG/exec';
 const IS_ONLINE = true;
 
-async function apiCall(params){
-  try{
+function apiCall(params){
+  return new Promise((resolve)=>{
+    const cbName='cb'+Date.now();
+    params.callback=cbName;
     const url=API+'?'+new URLSearchParams(params).toString();
-    const res=await fetch(url,{redirect:'follow'});
-    const text=await res.text();
-    const json=JSON.parse(text);
-    if(json.ok===false){console.error('API error:',json.error);return null;}
-    return json.data!==undefined?json.data:json;
-  }catch(e){console.error('API error:',e);return null;}
+    window[cbName]=function(data){
+      delete window[cbName];
+      document.getElementById('jsonp-'+cbName)?.remove();
+      if(data&&data.ok===false){console.error('API:',data.error);resolve(null);return;}
+      resolve(data&&data.data!==undefined?data.data:data);
+    };
+    const s=document.createElement('script');
+    s.id='jsonp-'+cbName;
+    s.src=url;
+    s.onerror=()=>{delete window[cbName];s.remove();resolve(null);};
+    document.head.appendChild(s);
+    setTimeout(()=>{if(window[cbName]){delete window[cbName];s.remove();resolve(null);}},8000);
+  });
 }
 
 async function loadRequests(){
