@@ -152,6 +152,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
       <div class="ni" onclick="go('contacts',this)"><span class="ndot"></span>Contacts</div>
     </nav>
     <div class="suser"><strong id="suname">—</strong><span id="suemail"></span></div>
+      <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.1)">
+      <button onclick="clearAllData()" style="width:100%;padding:7px;background:rgba(122,30,30,.7);border:none;border-radius:6px;color:#fff;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;font-weight:500">
+        🗑 Clear all my data
+      </button>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;text-align:center">Removes all saved requests & login</div>
+    </div>
   </aside>
   <main class="main">
 
@@ -1623,7 +1629,7 @@ function decide(reqId,role,dec){
     a.st='Email Sent';a.cm='';a.at=null;
     // If undoing a rejection, restore all Blocked approvers to Email Sent and restore request status
     if(dec==='Rejected'){
-      r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Email Sent';});
+      r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Pending';});
       r.status='In Progress';
     }
     // If undoing an approval, recalculate status
@@ -1634,7 +1640,7 @@ function decide(reqId,role,dec){
   // If changing FROM Blocked to a decision, restore request to In Progress first
   if(a.st==='Blocked'||r.status==='Rejected'){
     r.status='In Progress';
-    r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Email Sent';});
+    r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Pending';});
   }
   a.st=dec;a.cm=cm||'';a.at=now();
   r.notes.push({f:role,x:`${dec}${cm?': '+cm:''}`,at:now()});
@@ -1726,6 +1732,12 @@ ${r.sb}`);
   window.open(`mailto:${to}?subject=${subj}&body=${body}`);
   r.notes.push({f:'System',x:`Reminder sent to ${a.r}`,at:now()});
   save();renderAll();openModal(reqId);showT('Reminder sent to '+a.r);
+}
+
+function clearAllData(){
+  if(!confirm("This will delete ALL your saved requests and log you out. Are you sure?"))return;
+  localStorage.clear();
+  location.reload();
 }
 </script>
 </body>
