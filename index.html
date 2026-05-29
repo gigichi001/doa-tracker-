@@ -11897,11 +11897,14 @@ function openModal(id){
       lvH+='</div>';
     }
     inR.forEach(a=>{
-      // Bug 2: notify locked until all higher approval levels are done
+      // Bug 2 fix: notify locked until ALL items at higher levels are completed (not just approvals)
       const lvNum2=parseInt(lv);
-      const higherBlocked=apvLvs.some(al=>al>lvNum2&&r.apvs.filter(x=>x.lv===al&&isApv(x.t)).some(x=>x.st==='Pending'||x.st==='Email Sent'));
-      const canNotify2=!higherBlocked&&r.status!=='Rejected'&&a.st==='Pending';
-      const notifyBtn=canNotify2?`<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>`:(a.st==='Pending'?`<span style="color:var(--tx3);margin-left:6px;font-size:10px">🔒 Locked — complete higher levels first</span>`:'<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>');
+      // Get all unique levels higher than this one
+      const allHigherLevels=[...new Set(r.apvs.map(x=>x.lv))].filter(al=>al>lvNum2);
+      // Check if any item at a higher level is still pending (not yet actioned)
+      const higherStillPending=allHigherLevels.some(al=>r.apvs.filter(x=>x.lv===al).some(x=>x.st==='Pending'));
+      const canNotify2=!higherStillPending&&r.status!=='Rejected'&&a.st==='Pending';
+      const notifyBtn=canNotify2?`<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>`:(a.st==='Pending'?`<span style="color:var(--tx3);margin-left:6px;font-size:10px">🔒 Locked — complete previous level first</span>`:'<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>');
       lvH+=`<div class="minf"><span class="badge bgr" style="font-size:9px;margin-right:5px">L${lv}</span><span class="badge bw" style="font-size:9px;margin-right:5px">${a.t}</span><span style="font-size:9px;color:var(--tx3)">— notify only, no approval needed</span> <strong>${a.r}</strong>${a.n&&a.n!==a.r?` (${a.n})`:''} <span style="color:var(--tx3);font-size:10px">· ✉ ${a.re}</span> ${notifyBtn}</div>`;
     });
   });
