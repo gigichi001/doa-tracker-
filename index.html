@@ -1150,8 +1150,8 @@
                             <label class="fl">Product / Function Scope</label>
                             <select class="fs" id="sscope" onchange="onScope()">
                                 <option value="">Select scope</option>
-                                <option value="MAS">MAS (Marine Agency Services)</option>
-                                <option value="Liner">Liner (Liner Agency Services)</option>
+                                <option value="MAS">MAS </option>
+                                <option value="Liner">Liner </option>
                                 <option value="Logistics">Logistics</option>
                                 <option value="Group Compliance">Group Compliance</option>
                                 <option value="Group Transformation">Group Transformation</option>
@@ -3892,7 +3892,7 @@
         c: 'Legal Oversight & External Counsel',
         s: 'Appointment of external counsel for advisory, litigation, investigation, legal notices, and regulatory matters',
         lv: 2,
-        r: 'Chief Operating Officer',
+        r: 'Chief Executive Officer',
         t: 'Approval'
     }, {
         a: 'Legal & Compliance',
@@ -3906,69 +3906,97 @@
         a: 'Legal & Compliance',
         c: 'Legal Oversight & External Counsel',
         s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 5,
+        r: 'Country Manager / Country Director / Legal Representative',
+        t: 'Scope Inform & Consult'
+    },
+        {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Compliance',
+        t: 'Inform & Consult'
+    },
+         {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Transformation',
+        t: 'Scope Inform & Consult'
+    },
+         {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Technology',
+        t: 'Scope Inform & Consult'
+    },
+         {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Risk, HSEQ & Insurance',
+        t: 'Scope Inform & Consult'
+    },         
+      {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
         lv: 4,
         r: 'Group Human Resource',
         t: 'Approval'
-    }, {
+    },
+           {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Finance',
+        t: 'Scope Inform & Consult'
+    }, 
+      {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Central Procurement',
+        t: 'Scope Inform & Consult'
+    },         
+            {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 3,
+        r: 'Group General Manager - Marine Agency Services',
+        t: 'Scope Inform & Consult'
+    },
+    {
         a: 'Legal & Compliance',
         c: 'Legal Oversight & External Counsel',
         s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
         lv: 2,
-        r: 'Chief Operating Officer',
-        t: 'Approval'
+        r: 'Chief Executive Officer',
+        t: 'Inform & Consult'
     },
-    {
-        a: 'Legal & Compliance',
-        c: 'Legal Oversight & External Counsel',
-        s: 'Commencement or termination of Litigation, disputes and claims (non Employment related)',
-        lv: 2,
-        r: 'Chief Operating Officer',
-        t: 'Approval'
-    },
+    
     {
         a: 'Legal & Compliance',
         c: 'Legal Oversight & External Counsel',
         s: 'Authority to issue demand letters, or responses',
         lv: 2,
-        r: 'Chief Operating Officer',
+        r: 'Chief People Officer',
         t: 'Approval'
-    }, {
-        a: 'Legal & Compliance',
-        c: 'Legal Oversight & External Counsel',
-        s: 'Authority to issue demand letters, or responses',
-        lv: 2,
-        r: 'Chief Compliance Officer',
-        t: 'Approval'
-    },
-    {
-        a: 'Legal & Compliance',
-        c: 'Legal Oversight & External Counsel',
-        s: 'Approval to respond to regulators, authorities, or government agencies',
-        lv: 2,
-        r: 'Chief Operating Officer',
-        t: 'Approval'
-    }, {
-        a: 'Legal & Compliance',
-        c: 'Legal Oversight & External Counsel',
-        s: 'Approval to respond to regulators, authorities, or government agencies',
-        lv: 2,
-        r: 'Chief Compliance Officer',
-        t: 'Approval'
-    },
-    {
-        a: 'Legal & Compliance',
-        c: 'Legal Oversight & External Counsel',
-        s: 'Approval of submissions, disclosures, and settlement positions',
-        lv: 2,
-        r: 'Chief Operating Officer',
-        t: 'Approval'
-    }, {
+    , {
         a: 'Legal & Compliance',
         c: 'Legal Oversight & External Counsel',
         s: 'Approval of submissions, disclosures, and settlement positions',
         lv: 2,
         r: 'Chief Compliance Officer',
-        t: 'Approval'
+        t: 'Inform & Consult'
     },
     // ── LEGAL & COMPLIANCE > ADMINISTRATIVE AUTHORITY ──
     {
@@ -4028,7 +4056,7 @@
     {
         a: 'Customer Contracts',
         c: 'Changes & Amendments to Contract Lifecycle process and approvals',
-        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Overall Contract Lifecycle Management of all customer & third-party contracts (new, renew, terminate) - (excluded. EPDA, quotations using BL standard T&C, C/P, PO, WO)',
         lv: 3,
         r: 'Group MD — Logistics',
         t: 'Scope Approval'
@@ -4060,7 +4088,47 @@
         lv: 2,
         r: 'Chief Operating Officer',
         t: 'Approval'
-    }, ];
+    }, 
+         {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Overall Contract Lifecycle Management of all customer & third-party contracts (new, renew, terminate) - (excluded. EPDA, quotations using BL standard T&C, C/P, PO, WO)',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, 
+    
+    
+    
+    ];
 
     // ── CONTACTS ──
     const CONS = [// ── GROUP / EXECUTIVE ──
