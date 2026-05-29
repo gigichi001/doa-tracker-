@@ -167,7 +167,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
         <div class="sc"><div class="sl">Pending approvals</div><div class="sv" id="st2" style="color:var(--am)">0</div><div class="ss">Awaiting response</div></div>
         <div class="sc"><div class="sl">Completed</div><div class="sv" id="st4" style="color:var(--gr)">0</div><div class="ss">Fully approved</div></div>
       </div>
-      <div class="ib">💡 <strong>How it works:</strong> Submit a request → system shows required approvers by level → send Level 1 emails first → only after Level 1 is fully approved do Level 2 emails unlock → track each response here. Inform recipients are notified separately and do not block progress.</div>
+      <div class="ib">💡 <strong>How it works:</strong> Submit a request → system shows required approvers by level → send Level 5 emails first → only after Level 5 is fully approved do Level 4 emails unlock → track each response here.</div>
       <div class="pt">Recent activity</div>
       <div id="dash-list"></div>
     </div>
@@ -207,7 +207,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
         <div class="fr"><label class="fl">Purpose / justification <span style="color:var(--tx3);font-weight:400">(shown in emails to approvers)</span></label><textarea class="fta" id="rpurpose" placeholder="Describe why this action is needed and any relevant context..."></textarea></div>
         <div id="amap" style="display:none">
           <div class="amap"><h4>Required approvals for this action</h4><div id="alvls"></div></div>
-          <div style="margin-top:10px;padding:9px 12px;background:var(--sur2);border-radius:var(--rs);font-size:11px;color:var(--tx2)"><strong>Sequential:</strong> Level 1 emails go first. Level 2 only unlocks after all Level 1 approvals are received. Inform recipients notified at their level separately.</div>
+          <div style="margin-top:10px;padding:9px 12px;background:var(--sur2);border-radius:var(--rs);font-size:11px;color:var(--tx2)"><strong>Sequential:</strong> Level 5 emails go first. Level 4 only unlocks after all Level 5 approvals are received/ notifies are sent. </div>
           <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn btn-p" onclick="submitReq()">Submit Request</button>
             <button class="btn" onclick="clearForm()">Clear</button>
