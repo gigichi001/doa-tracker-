@@ -1,16 +1,3 @@
-To update the drop-down cascading logic perfectly based on the provided `DOA_Matrix_v4.xlsx - DOA Matrix.csv` file, we need to inspect all unique values for **Functional Area**, **Category of Interest**, and **Sub Category**.
-
-Based on the CSV file data, here are the exact unique mapping relationships extracted for your dropdowns:
-
-* **HR**: Recruitment, Compensation & Benefits, Employment & Termination, Mobility & Travel, HR Administration & Systems
-* **Finance & Treasury**: Corporate Governance, Financing & Banking, Cash Management & Treasury, Accounting & Financial Reporting, Tax Compliance & Advisory, Internal Controls & Auditing, Capital Expenditure (CAPEX), Operational Expenditure (OPEX), Customer Credit Management
-* **Legal & Compliance**: Legal Matters, Board & Shareholder Matters, Sanctions & Trade Compliance, Data Privacy & Security, Regulatory Compliance
-* **Commercial**: Commercial Proposals & Quotations, Customer Contracts, Vendor & Supplier Agreements, Agent & Principal Agreements, Joint Ventures & M&A
-* **IT & Technology**: IT Infrastructure & Hardware, Software & Applications, Cybersecurity, IT Services & Support
-* **HSSE & Insurance**: Health & Safety, Security, Environment, Insurance Policies, Incident Management
-* **Group Procurement**: Legal & Compliance Administrative Authority, Customer Contracts *(Note: In the CSV data rows, rows 42 and 43 list "Group Procurement" as the Product / Function Scope, but "Customer Contracts" and "Legal & Compliance" as the Functional Area, which your dropdown handles beautifully as the primary categories).*
-
-Here is the complete, updated HTML file with the fully restored `srcData` dictionary reflecting the complete tree of choices present in your spreadsheet matrix. No other layout styles, themes, or logic variables have been changed.
 
 ```html
 <!DOCTYPE html>
