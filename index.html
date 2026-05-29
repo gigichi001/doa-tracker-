@@ -186,8 +186,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-
           <select class="fs" id="sscope" onchange="onScope()">
             <option value="">Select scope</option>
             <option value="All">All / Group Level</option>
-            <option value="MAS">MAS </option>
-            <option value="Liner">Liner </option>
+            <option value="MAS">MAS (Marine Agency Services)</option>
+            <option value="Liner">Liner (Liner Agency Services)</option>
             <option value="Logistics">Logistics</option>
             <option value="Group Compliance">Group Compliance</option>
             <option value="Group Transformation">Group Transformation</option>
@@ -11889,7 +11889,7 @@ function openModal(id){
       lvH+=`<div class="ml"><div class="mlh"><span class="badge ${lvRj?'br':lvDn?'bg':isAct?'bw':'bgr'}" style="font-size:9px">L${lv}</span>${lvN[lv]||'L'+lv}${isLk?` <span style="font-size:9px;color:var(--tx3)">🔒 Locked — Level ${lvN2+1} must complete first</span>`:''}${isAct&&!lvDn?' <span style="font-size:9px;color:var(--am)">▶ Active — send emails now</span>':''}</div>`;
       apR.forEach(a=>{
         const sc=a.st==='Approved'?'bg':a.st==='Rejected'?'br':a.st==='Blocked'?'bgr':a.st==='Email Sent'?'bt':'bgr';
-        lvH+=`<div class="ma"><div class="mal"><div class="man">${a.r}${a.n&&a.n!==a.r?` <span style="color:var(--tx3);font-size:10px;font-weight:400">(${a.n})</span>`:''}</div><div class="mae">✉ ${a.re}</div>${a.cm?`<div style="font-size:10px;color:var(--tx2);font-style:italic;margin-top:2px">"${a.cm}"</div>`:''}</div><div class="maa"><span class="badge ${sc}">${a.st}</span>${(isAct||isSubmitter)&&alv===lvN2&&r.status==='In Progress'&&a.st==='Pending'?`<button class="btn btn-em" onclick="sendOne('${id}','${a.r}')">✉ Send</button>`:''} ${a.st==='Email Sent'&&r.status==='In Progress'&&a.st!=='Blocked'?`<button class="btn" style="padding:3px 8px;font-size:10px;border-color:#7a4f00;color:var(--am)" onclick="sendReminder('${id}','${a.r}')">↩ Remind</button>`:''}${isAct&&a.st!=='Blocked'?`
+        lvH+=`<div class="ma"><div class="mal"><div class="man">${a.r}${a.n&&a.n!==a.r?` <span style="color:var(--tx3);font-size:10px;font-weight:400">(${a.n})</span>`:''}</div><div class="mae">✉ ${a.re}</div>${a.cm?`<div style="font-size:10px;color:var(--tx2);font-style:italic;margin-top:2px;padding:3px 6px;background:var(--sur);border-radius:3px;border-left:2px solid var(--bdr2)">💬 ${a.cm}</div>`:''}</div><div class="maa"><span class="badge ${sc}">${a.st}</span>${(isAct||isSubmitter)&&alv===lvN2&&r.status==='In Progress'&&a.st==='Pending'?`<button class="btn btn-em" onclick="sendOne('${id}','${a.r}')">✉ Send</button>`:''} ${a.st==='Email Sent'&&r.status==='In Progress'&&a.st!=='Blocked'?`<button class="btn" style="padding:3px 8px;font-size:10px;border-color:#7a4f00;color:var(--am)" onclick="sendReminder('${id}','${a.r}')">↩ Remind</button>`:''}${isAct&&a.st!=='Blocked'?`
         <button class="btn btn-ok btn-sm ${a.st==='Approved'?'selected':''}" onclick="decide('${id}','${a.r}','Approved')" style="padding:3px 9px;font-size:10px">${a.st==='Approved'?'✓ Approved':'✓ Approve'}</button>
         <button class="btn btn-no btn-sm ${a.st==='Rejected'?'selected':''}" onclick="decide('${id}','${a.r}','Rejected')" style="padding:3px 9px;font-size:10px">${a.st==='Rejected'?'✗ Rejected':'✗ Reject'}</button>
       `:''}</div></div>`;
@@ -11897,7 +11897,12 @@ function openModal(id){
       lvH+='</div>';
     }
     inR.forEach(a=>{
-      lvH+=`<div class="minf"><span class="badge bgr" style="font-size:9px;margin-right:5px">L${lv}</span><span class="badge bw" style="font-size:9px;margin-right:5px">${a.t}</span><span style="font-size:9px;color:var(--tx3)">— notify only, no approval needed</span> <strong>${a.r}</strong>${a.n&&a.n!==a.r?` (${a.n})`:''} <span style="color:var(--tx3);font-size:10px">· ✉ ${a.re}</span> ${a.st==='Pending'&&r.status!=='Rejected'?`<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>`:'<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>'}</div>`;
+      // Bug 2: notify locked until all higher approval levels are done
+      const lvNum2=parseInt(lv);
+      const higherBlocked=apvLvs.some(al=>al>lvNum2&&r.apvs.filter(x=>x.lv===al&&isApv(x.t)).some(x=>x.st==='Pending'||x.st==='Email Sent'));
+      const canNotify2=!higherBlocked&&r.status!=='Rejected'&&a.st==='Pending';
+      const notifyBtn=canNotify2?`<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>`:(a.st==='Pending'?`<span style="color:var(--tx3);margin-left:6px;font-size:10px">🔒 Locked — complete higher levels first</span>`:'<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>');
+      lvH+=`<div class="minf"><span class="badge bgr" style="font-size:9px;margin-right:5px">L${lv}</span><span class="badge bw" style="font-size:9px;margin-right:5px">${a.t}</span><span style="font-size:9px;color:var(--tx3)">— notify only, no approval needed</span> <strong>${a.r}</strong>${a.n&&a.n!==a.r?` (${a.n})`:''} <span style="color:var(--tx3);font-size:10px">· ✉ ${a.re}</span> ${notifyBtn}</div>`;
     });
   });
   const thrH=r.notes.map(nt=>`<div class="tm"><div class="tav">${ini(nt.f)}</div><div class="tb ${nt.f===me?.n?'mine':''}"><div class="tw">${nt.f}</div><div class="tt">${nt.x}</div><div class="ti">${nt.at}</div></div></div>`).join('')||'<div style="font-size:11px;color:var(--tx3)">No notes yet.</div>';
@@ -11910,27 +11915,50 @@ function sendOne(reqId,role){
   if(isApv(a.t)&&a.lv!==alv){showT('Cannot send — Level '+(alv||a.lv)+' must complete first');return}
   const to=a.re;
   const subj=encodeURIComponent(`[DOA ${isInf(a.t)?'NOTIFY':'ACTION REQUIRED'}] ${r.sub}`);
-  const isInfType=isInf(a.t);
-  const body=encodeURIComponent(`Dear ${a.n||a.r},\n\n${isInfType
-    ?`This email is to notify you of the following action under the Ben Line Delegation of Authority policy.\n\nNo formal approval is required from you${a.t.includes('Consult')?' — your input and comments are welcome.':'. No action needed.'}`
-    :`I am writing to request your ${a.t} for the following action under the Ben Line Delegation of Authority policy.`}\n\n────────────────────────────\nACTION:     ${r.sub}\nSCOPE:      ${r.scope||'Group'}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co||'Group'}\n────────────────────────────\nPURPOSE / JUSTIFICATION:\n${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\nYOUR ROLE:  ${a.r}\nACTION:     ${a.t}\n────────────────────────────\n\n${isInfType?`No further action required from you.`:`Please reply to this email with your response.`}\n\nThank you,\n${r.sb}`);
+  // Bug 3: different email body per action type
+  function getOpeningPara(t){
+    if(t==='Inform'||t==='Scope Inform')
+      return `This email is to inform you of the following action under the Ben Line Delegation of Authority policy.\n\nThis is for your information only — no action or response is required from you.`;
+    if(t==='Inform & Consult'||t==='Scope Inform & Consult')
+      return `This email is to inform and consult with you on the following action under the Ben Line Delegation of Authority policy.\n\nWhile no formal approval is required, your input and feedback are valued. Please feel free to share any comments or concerns.`;
+    if(t==='Scope Approval'||t==='Approval')
+      return `I am writing to request your formal ${t} for the following action under the Ben Line Delegation of Authority policy.\n\nPlease review the details below and reply with your approval or any questions.`;
+    return `I am writing regarding the following action under the Ben Line Delegation of Authority policy.`;
+  }
+  function getClosingPara(t){
+    if(t==='Inform'||t==='Scope Inform')
+      return `No further action is required from you. This email is for your records.`;
+    if(t==='Inform & Consult'||t==='Scope Inform & Consult')
+      return `Please share any comments or concerns at your earliest convenience. If we do not hear from you, we will proceed with this action.`;
+    return `Please reply to this email with your decision (Approved / Not Approved) and any comments.`;
+  }
+  const body=encodeURIComponent(`Dear ${a.n||a.r},\n\n${getOpeningPara(a.t)}\n\n────────────────────────────\nACTION:     ${r.sub}\nSCOPE:      ${r.scope||'Group'}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co||'Group'}\n────────────────────────────\nPURPOSE / JUSTIFICATION:\n${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\nYOUR ROLE:  ${a.r}\nACTION:     ${a.t}\n────────────────────────────\n\n${getClosingPara(a.t)}\n\nThank you,\n${r.sb}`);
   window.open(`mailto:${to}?subject=${subj}&body=${body}`);
   try{navigator.clipboard.writeText(decodeURIComponent(body))}catch(e){}
   a.sent=true;if(a.st==='Pending')a.st='Email Sent';
-  r.notes.push({f:'System',x:`Email sent to ${a.r} (${a.re})`,at:now()});
+  r.notes.push({f:'System',x:`Email sent to ${a.r} (${a.re}) — Action type: ${a.t}`,at:now()});
   save();renderAll();openModal(reqId);showT('Email opened for '+a.r);
 }
 function decide(reqId,role,dec){
-  const cm=dec==='Rejected'?prompt(`Reason for rejection (optional):`)||'':null;
   const r=reqs.find(x=>x.id===reqId),a=r.apvs.find(x=>x.r===role);if(!a)return;
+  // Bug 5 fix: if clicking same button again = undo/cancel that decision
   if(a.st===dec){
-    a.st='Pending';a.cm='';a.at=null;
-    if(dec==='Rejected'){r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Pending';});r.status='In Progress';}
+    const cancelReason=dec==='Rejected'?prompt(`Reason for cancelling the rejection (optional):`)||'':null;
+    // Bug 4 fix: restore to Email Sent if email was previously sent, not Pending
+    const restoreSt=a.sent?'Email Sent':'Pending';
+    a.st=restoreSt;a.cm='';a.at=null;
+    if(dec==='Rejected'){
+      // Bug 4 fix: restore blocked approvers to their correct prior state too
+      r.apvs.forEach(x=>{if(x.st==='Blocked')x.st=x.sent?'Email Sent':'Pending';});
+      r.status='In Progress';
+    }
     if(dec==='Approved') r.status='In Progress';
-    r.notes.push({f:me?.n||'User',x:`Decision cleared for ${role}`,at:now()});
-    save();renderAll();openModal(reqId);showT('Decision cleared — '+role+' reset to pending');return;
+    r.notes.push({f:me?.n||'User',x:`Cancelled ${dec} for ${role}${cancelReason?': '+cancelReason:''}`,at:now()});
+    save();renderAll();openModal(reqId);showT('Decision cancelled — '+role+' restored');return;
   }
-  if(a.st==='Blocked'||r.status==='Rejected'){r.status='In Progress';r.apvs.forEach(x=>{if(x.st==='Blocked')x.st='Pending';});}
+  // Normal new decision
+  const cm=dec==='Rejected'?prompt(`Reason for rejection (optional):`)||'':null;
+  if(a.st==='Blocked'||r.status==='Rejected'){r.status='In Progress';r.apvs.forEach(x=>{if(x.st==='Blocked')x.st=x.sent?'Email Sent':'Pending';});}
   a.st=dec;a.cm=cm||'';a.at=now();
   r.notes.push({f:role,x:`${dec}${cm?': '+cm:''}`,at:now()});
   const lv=a.lv,atLv=r.apvs.filter(x=>x.lv===lv&&isApv(x.t));
@@ -11984,8 +12012,10 @@ function closeMoBg(e){if(e.target===document.getElementById('mo'))closeMo()}
 function showT(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 function sendReminder(reqId,role){
   const r=reqs.find(x=>x.id===reqId),a=r.apvs.find(x=>x.r===role);if(!a)return;
-  const subj=encodeURIComponent(`[REMINDER — DOA] ${r.sub} — Pending your ${a.t}`);
-  const body=encodeURIComponent(`Dear ${a.n||a.r},\n\nThis is a gentle reminder that your ${a.t} is still pending for the following action.\n\n────────────────────────────\nACTION:     ${r.sub}\nSCOPE:      ${r.scope||'Group'}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co||'Group'}\n────────────────────────────\nPURPOSE / JUSTIFICATION:\n${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\nYOUR ROLE:  ${a.r}\nACTION:     ${a.t}\n────────────────────────────\n\nPlease reply to this email with your response.\n\nThank you,\n${r.sb}`);
+  const subj=encodeURIComponent(`[REMINDER — DOA] ${r.sub} — Awaiting your ${a.t}`);
+  const isInfT=isInf(a.t);
+  const reminderClose=isInfT?`If you have any comments or questions, please reply at your earliest convenience. Otherwise no action is required.`:`Please reply to this email with your decision (Approved / Not Approved) at your earliest convenience.`;
+  const body=encodeURIComponent(`Dear ${a.n||a.r},\n\nThis is a gentle reminder regarding the following action which is awaiting your ${a.t}.\n\n────────────────────────────\nACTION:     ${r.sub}\nSCOPE:      ${r.scope||'Group'}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co||'Group'}\n────────────────────────────\nPURPOSE / JUSTIFICATION:\n${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\nYOUR ROLE:  ${a.r}\nACTION:     ${a.t}\n────────────────────────────\n\n${reminderClose}\n\nThank you,\n${r.sb}`);
   window.open(`mailto:${a.re}?subject=${subj}&body=${body}`);
   r.notes.push({f:'System',x:`Reminder sent to ${a.r}`,at:now()});
   save();renderAll();openModal(reqId);showT('Reminder sent to '+a.r);
