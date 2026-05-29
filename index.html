@@ -1,692 +1,5156 @@
-
-```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOA Tracker — Ben Line Group</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#f5f4f0;--sur:#fff;--sur2:#f0efe9;--bdr:#e2e0d8;--bdr2:#d0cec5;--tx:#1a1916;--tx2:#6b6960;--tx3:#9e9c94;--ac:#1e3a5f;--acl:#e8eef5;--gr:#1a5c3a;--grb:#e6f2eb;--am:#7a4f00;--amb:#fdf3e0;--rd:#7a1e1e;--rdb:#fbe8e8;--bl:#1a3a6b;--blb:#e8eef8;--pu:#4a1a7a;--pub:#f0e8fa;--tl:#0a5c5c;--tlb:#e0f2f2;--r:10px;--rs:6px}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:13px;line-height:1.5;padding:24px}
-header{display:flex;justify-content:between;align-items:center;margin-bottom:24px;border-bottom:1px solid var(--bdr);padding-bottom:16px}
-.logo-title{display:flex;align-items:center;gap:12px}
-.logo{font-weight:600;font-size:16px;letter-spacing:-0.5px;text-transform:uppercase;color:var(--ac);border:1.5px solid var(--ac);padding:2px 6px;border-radius:4px}
-h1{font-size:16px;font-weight:600;color:var(--tx)}
-.user-badge{font-size:12px;color:var(--tx2);background:var(--sur2);padding:4px 8px;border-radius:var(--rs);font-family:'DM Mono',monospace}
-.grid{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start}
-.card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
-.card-h{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx2);margin-bottom:16px;display:flex;justify-content:between;align-items:center}
-.f-gp{margin-bottom:14px}
-.f-gp label{display:block;font-size:12px;font-weight:500;color:var(--tx2);margin-bottom:4px}
-input,select,textarea{width:100%;font-family:inherit;font-size:13px;color:var(--tx);padding:8px 10px;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rs);outline:none;transition:border 0.15s}
-input:focus,select:focus,textarea:focus{border-color:var(--ac)}
-textarea{resize:vertical;min-height:70px}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button{font-family:inherit;font-size:13px;font-weight:500;padding:8px 16px;border-radius:var(--rs);cursor:pointer;border:1px solid transparent;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-button.prm{background:var(--ac);color:#fff}
-button.prm:hover{background:#13253f}
-button.sec{background:var(--sur2);color:var(--tx);border-color:var(--bdr)}
-button.sec:hover{background:var(--bdr)}
-.btn-gp-right{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
-.toolbar{display:flex;justify-content:between;align-items:center;margin-bottom:14px;gap:12px;flex-wrap:wrap}
-.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.filter-btn{font-size:12px;padding:4px 10px;background:var(--sur);border:1px solid var(--bdr);border-radius:20px;color:var(--tx2)}
-.filter-btn.active{background:var(--ac);color:#fff;border-color:var(--ac)}
-.search-box{max-width:24px;position:relative}
-.search-box input{padding-left:28px;border-radius:20px;font-size:12px;padding-top:4px;padding-bottom:4px}
-.search-box::before{content:'\26B2';position:absolute;left:10px;top:5px;color:var(--tx3);transform:rotate(-45deg);font-size:12px}
-.tbl-w{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden}
-table{width:100%;border-collapse:collapse;text-align:left}
-th{background:var(--sur2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx2);padding:10px 14px;border-bottom:1px solid var(--bdr2)}
-td{padding:12px 14px;border-bottom:1px solid var(--bdr);vertical-align:top}
-tr:last-child td{border-bottom:none}
-tr.clickable:hover td{background:#faf9f6;cursor:pointer}
-.b{font-weight:500}
-.m{font-family:'DM Mono',monospace;font-size:12px}
-.t-dim{color:var(--tx2)}
-.t-muted{color:var(--tx3);font-size:11px}
-.badge{display:inline-block;font-size:11px;font-weight:500;padding:2px 6px;border-radius:4px;font-family:'DM Mono',monospace;text-transform:uppercase}
-.badge.pnd{background:var(--amb);color:var(--am)}
-.badge.apv{background:var(--grb);color:var(--gr)}
-.badge.rej{background:var(--rdb);color:var(--rd)}
-.apv-chain{display:flex;flex-direction:column;gap:4px;margin-top:2px}
-.apv-row{display:flex;align-items:center;gap:6px;font-size:11px}
-.apv-dot{width:6px;height:6px;border-radius:50%}
-.apv-dot.pnd{background:var(--am)}
-.apv-dot.apv{background:var(--gr)}
-.apv-dot.rej{background:var(--rd)}
-.apv-dot.inf{background:var(--bl)}
-.apv-rem{font-size:10px;color:var(--ac);cursor:pointer;text-decoration:underline;margin-left:4px;visibility:hidden}
-.apv-row:hover .apv-rem{visibility:visible}
-.mo{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,25,22,0.4);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
-.mo.open{display:flex}
-.mo-c{background:var(--sur);border:1px solid var(--bdr2);border-radius:var(--r);width:100%;max-width:640px;max-height:85vh;overflow-y:auto;box-shadow:0 10px 30px rgba(0,0,0,0.08);display:flex;flex-direction:column}
-.mo-h{padding:16px 20px;border-bottom:1px solid var(--bdr);display:flex;justify-content:between;align-items:center;background:var(--sur2)}
-.mo-b{padding:20px;overflow-y:auto}
-.mo-f{padding:14px 20px;border-top:1px solid var(--bdr);display:flex;justify-content:flex-end;gap:8px;background:var(--sur2)}
-.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.det-lbl{font-size:11px;font-weight:600;text-transform:uppercase;color:var(--tx2);margin-bottom:2px}
-.det-val{font-size:13px}
-.det-val.block{background:var(--bg);padding:10px;border-radius:var(--rs);font-family:inherit;white-space:pre-wrap;border:1px solid var(--bdr);grid-column:span 2}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--tx);color:var(--sur);padding:10px 16px;border-radius:var(--rs);font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:200;display:none;opacity:0;transition:opacity 0.2s}
-.toast.show{display:block;opacity:1}
-.apv-box{border:1px solid var(--bdr);border-radius:var(--rs);padding:10px;margin-bottom:8px;background:var(--bg)}
-.apv-box-h{display:flex;justify-content:between;align-items:center;margin-bottom:6px;font-weight:500;font-size:12px}
-.no-data{padding:40px;text-align:center;color:var(--tx3);font-style:italic}
-</style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DOA Tracker — Ben Line Group</title>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg: #f5f4f0;
+                --sur: #fff;
+                --sur2: #f0efe9;
+                --bdr: #e2e0d8;
+                --bdr2: #d0cec5;
+                --tx: #1a1916;
+                --tx2: #6b6960;
+                --tx3: #9e9c94;
+                --ac: #1e3a5f;
+                --acl: #e8eef5;
+                --gr: #1a5c3a;
+                --grb: #e6f2eb;
+                --am: #7a4f00;
+                --amb: #fdf3e0;
+                --rd: #7a1e1e;
+                --rdb: #fbe8e8;
+                --bl: #1a3a6b;
+                --blb: #e8eef8;
+                --pu: #4a1a7a;
+                --pub: #f0e8fa;
+                --tl: #0a5c5c;
+                --tlb: #e0f2f2;
+                --r: 10px;
+                --rs: 6px
+            }
 
-<header>
-  <div class="logo-title">
-    <div class="logo">BLG</div>
-    <h1>DOA Request Tracker</h1>
-  </div>
-  <div class="user-badge" id="ub">Active Session: User</div>
-</header>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0
+            }
 
-<div class="grid">
-  <div class="card">
-    <div class="card-h"><span>New Authority Request</span></div>
-    <form id="reqForm" onsubmit="saveReq(event)">
-      <div class="f-gp">
-        <label>Subject / Action Description</label>
-        <input type="text" id="sub" required placeholder="e.g. Approve Contract Template Dev...">
-      </div>
-      
-      <div class="row-2">
-        <div class="f-gp">
-          <label>Functional Area</label>
-          <select id="area" onchange="renCat()" required></select>
-        </div>
-        <div class="f-gp">
-          <label>Category of Interest</label>
-          <select id="cat" onchange="renSub()" required></select>
-        </div>
-      </div>
+            body {
+                font-family: 'DM Sans',sans-serif;
+                background: var(--bg);
+                color: var(--tx);
+                font-size: 14px;
+                line-height: 1.5;
+                min-height: 100vh
+            }
 
-      <div class="f-gp">
-        <label>Sub Category / Focus</label>
-        <select id="scat" required></select>
-      </div>
+            .app {
+                display: flex;
+                min-height: 100vh
+            }
 
-      <div class="row-2">
-        <div class="f-gp">
-          <label>Country Context</label>
-          <select id="co" required>
-            <option value="Group">Group / Multi-Country</option>
-            <option value="Singapore">Singapore</option>
-            <option value="Malaysia">Malaysia</option>
-            <option value="Thailand">Thailand</option>
-            <option value="Vietnam">Vietnam</option>
-            <option value="Indonesia">Indonesia</option>
-            <option value="Philippines">Philippines</option>
-            <option value="Japan">Japan</option>
-            <option value="China">China</option>
-          </select>
-        </div>
-        <div class="f-gp">
-          <label>Value / Threshold Limit</label>
-          <input type="text" id="lim" placeholder="e.g. US$ 50,000 or N/A">
-        </div>
-      </div>
+            .side {
+                width: 220px;
+                background: var(--ac);
+                color: #fff;
+                flex-shrink: 0;
+                display: flex;
+                flex-direction: column;
+                padding: 20px 0;
+                position: sticky;
+                top: 0;
+                height: 100vh
+            }
 
-      <div class="f-gp">
-        <label>Purpose / Justification</label>
-        <textarea id="purpose" required placeholder="Provide structural context and business case details..."></textarea>
-      </div>
+            .slogo {
+                padding: 0 18px 18px;
+                border-bottom: 1px solid rgba(255,255,255,.12)
+            }
 
-      <div class="btn-gp-right">
-        <button type="button" class="sec" onclick="resetForm()">Clear</button>
-        <button type="submit" class="prm">Submit Request</button>
-      </div>
-    </form>
-  </div>
+            .slogo h1 {
+                font-size: 14px;
+                font-weight: 600
+            }
 
-  <div>
-    <div class="toolbar">
-      <div class="filters" id="flts">
-        <button class="filter-btn active" onclick="fltSt('ALL', this)">All Requests</button>
-        <button class="filter-btn" onclick="fltSt('PENDING', this)">Pending</button>
-        <button class="filter-btn" onclick="fltSt('APPROVED', this)">Approved</button>
-        <button class="filter-btn" onclick="fltSt('REJECTED', this)">Rejected</button>
-      </div>
-      <div class="search-box">
-        <input type="text" id="srch" oninput="renderReqs()" placeholder="Search tracker...">
-      </div>
-    </div>
+            .slogo p {
+                font-size: 10px;
+                opacity: .5;
+                font-family: 'DM Mono',monospace;
+                margin-top: 2px
+            }
 
-    <div class="tbl-w">
-      <table>
-        <thead>
-          <tr>
-            <th style="width:70px">ID</th>
-            <th>Subject & Context</th>
-            <th style="width:120px">Submitted By</th>
-            <th style="width:160px">Approval Workflow Stream</th>
-            <th style="width:90px">Status</th>
-          </tr>
-        </thead>
-        <tbody id="rtb"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
+            .snav {
+                padding: 12px 0;
+                flex: 1
+            }
 
-<div class="mo" id="mo" onclick="closeMoBg(event)">
-  <div class="mo-c">
-    <div class="mo-h">
-      <h3 style="font-size:14px;font-weight:600" id="m-tit">Request Details</h3>
-      <button onclick="closeMo()" style="background:none;border:none;font-size:18px;color:var(--tx3);cursor:pointer">&times;</button>
-    </div>
-    <div class="mo-b">
-      <div class="det-grid">
-        <div>
-          <div class="det-lbl">ID / Status</div>
-          <div class="det-val"><span class="m b" id="m-id"></span> &middot; <span id="m-st"></span></div>
-        </div>
-        <div>
-          <div class="det-lbl">Submitted Date & Origin</div>
-          <div class="det-val" id="m-dt"></div>
-        </div>
-        <div style="grid-column:span 2">
-          <div class="det-lbl">Context Structure Matrix</div>
-          <div class="det-val t-dim" id="m-ctx" style="font-size:12px"></div>
-        </div>
-        <div style="grid-column:span 2">
-          <div class="det-lbl">Purpose / Strategic Justification</div>
-          <div class="det-val block" id="m-pur"></div>
-        </div>
-      </div>
+            .ni {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 18px;
+                font-size: 12px;
+                color: rgba(255,255,255,.6);
+                cursor: pointer;
+                border-left: 2px solid transparent;
+                transition: all .15s
+            }
 
-      <div class="card-h" style="margin-bottom:8px;border-top:1px solid var(--bdr);padding-top:14px">
-        <span>Active Sign-Off Matrix Stream</span>
-      </div>
-      <div id="m-wf"></div>
-    </div>
-    <div class="mo-f">
-      <button class="sec" onclick="closeMo()">Close View</button>
-    </div>
-  </div>
-</div>
+            .ni:hover {
+                color: #fff;
+                background: rgba(255,255,255,.06)
+            }
 
-<div class="toast" id="toast"></div>
+            .ni.active {
+                color: #fff;
+                border-left-color: #fff;
+                background: rgba(255,255,255,.1);
+                font-weight: 500
+            }
 
-<script>
-// COMPLETE CASCADING MATRIX DATA DIRECTLY MAPPED FROM THE DOA EXCEL CSV
-const srcData = {
-  "HR": {
-    "Recruitment": [
-      "Unplanned & Unbudgeted",
-      "Expatriate",
-      "Salary Thresholds",
-      "Replacement Hiring"
-    ],
-    "Compensation & Benefits": [
-      "Salary Reviews / Adjustments",
-      "Bonus Plans & Payouts",
-      "Company Benefits Schemes",
-      "Discretionary Allowances"
-    ],
-    "Employment & Termination": [
-      "Senior Executives Sign-off",
-      "Redundancy & Restructuring",
-      "Settlement & Compromise Agreements",
-      "Standard Resignations / Terminations"
-    ],
-    "Mobility & Travel": [
-      "International Assignments",
-      "Relocation Packages",
-      "Global Travel Policies"
-    ],
-    "HR Administration & Systems": [
-      "Vendor Systems Licensing",
-      "Policy Implementation & Exceptions"
-    ]
-  },
-  "Finance & Treasury": {
-    "Corporate Governance": [
-      "Incorporation & Closure of Legal Entities",
-      "Power of Attorney Issuance",
-      "Authorized Signatories Assignment"
-    ],
-    "Financing & Banking": [
-      "Loan Facilities & Credit Lines",
-      "Guarantees & Indemnities",
-      "Opening & Closing Bank Accounts"
-    ],
-    "Cash Management & Treasury": [
-      "Intercompany Fund Loans",
-      "Dividend Distributions",
-      "Foreign Exchange Hedging Strategy"
-    ],
-    "Accounting & Financial Reporting": [
-      "Audited Financial Statements",
-      "Accounting Policy Adjustments",
-      "Write-off of Assets / Receivables"
-    ],
-    "Tax Compliance & Advisory": [
-      "Tax Returns Submission",
-      "Tax Audits Settling",
-      "Tax Structuring Schemes"
-    ],
-    "Internal Controls & Auditing": [
-      "Internal Audit Plans Strategy",
-      "Risk Register Verification"
-    ],
-    "Capital Expenditure (CAPEX)": [
-      "Budgeted Investment Framework",
-      "Unbudgeted Project Proposals"
-    ],
-    "Operational Expenditure (OPEX)": [
-      "Budgeted Routine Expenditure",
-      "Unbudgeted Variance Clearances"
-    ],
-    "Customer Credit Management": [
-      "Credit Limits Approvals",
-      "Extended Payment Terms Clearances"
-    ]
-  },
-  "Legal & Compliance": {
-    "Legal Matters": [
-      "Litigation Settlements Strategy",
-      "External Legal Counsel Retainers",
-      "IP and Trademark Registration"
-    ],
-    "Board & Shareholder Matters": [
-      "Board Resolution Approvals",
-      "Shareholder Agreements Structure"
-    ],
-    "Sanctions & Trade Compliance": [
-      "Sanctions Screening Escalations",
-      "Trade Licensing Exceptions"
-    ],
-    "Data Privacy & Security": [
-      "Data Breach Incident Tracking",
-      "GDPR / Cross-Border Data Flows"
-    ],
-    "Regulatory Compliance": [
-      "Regulatory Audit Disclosures",
-      "Fines and Penalties Handling"
-    ]
-  },
-  "Commercial": {
-    "Commercial Proposals & Quotations": [
-      "Strategic Freight Tenders",
-      "Tariff Deviations Permissions",
-      "Multi-Year Commitments"
-    ],
-    "Customer Contracts": [
-      "Standard Templates Variances",
-      "Non-Standard Liability Clauses",
-      "High Value Framework Frameworks",
-      "Changes & Amendments to Contract Lifecycle process and approvals"
-    ],
-    "Vendor & Supplier Agreements": [
-      "Major Procurement Logistics",
-      "Long-term Facility Leases",
-      "Service Level Exceptions"
-    ],
-    "Agent & Principal Agreements": [
-      "Liner Agency Appointments",
-      "Sub-Agency Contracts Setup",
-      "Commission Matrix Structure"
-    ],
-    "Joint Ventures & M&A": [
-      "NDA and MOU Executions",
-      "Due Diligence Clearances",
-      "Definitive Deal Closures"
-    ]
-  },
-  "IT & Technology": {
-    "IT Infrastructure & Hardware": [
-      "Data Center Provisioning",
-      "Hardware Refresh Procurement"
-    ],
-    "Software & Applications": [
-      "Enterprise Resource Planning Systems",
-      "SaaS Licenses Implementation"
-    ],
-    "Cybersecurity": [
-      "Security Policy Framework Exceptions",
-      "Incident Remediation Funding"
-    ],
-    "IT Services & Support": [
-      "Managed Services Outsource Agreements",
-      "Consultancy Framework Packages"
-    ]
-  },
-  "HSSE & Insurance": {
-    "Health & Safety": [
-      "Safety Equipment Standards Procurement",
-      "HSEQ Manual Updates"
-    ],
-    "Security": [
-      "Facility Access Architecture Setup",
-      "Security Guarding Contracts"
-    ],
-    "Environment": [
-      "Carbon Offsetting Frameworks",
-      "Waste Disposal Matrix Operations"
-    ],
-    "Insurance Policies": [
-      "P&I and Hull Underwritings",
-      "Office & Liability Coverage Limits"
-    ],
-    "Incident Management": [
-      "Major Claim Declarations",
-      "Emergency Response Spendings"
-    ]
-  },
-  "Group Procurement": {
-    "Legal & Compliance Administrative Authority": [
-      "Authority to approve compliance, data privacy audit scope, findings, corrective actions"
-    ],
-    "Customer Contracts": [
-      "Overall Contract Lifecycle Management of all customer & third-party contracts (new, renew, terminate) - (excluded. EPDA, quotations using BL standard T&C, C/P, PO, WO)",
-      "Review and approve any non Ben Line Group Standard templates, contractual terms and/or deviations"
-    ]
-  }
-};
+            .ndot {
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: currentColor;
+                opacity: .6
+            }
 
-const apvMatrix = {
-  "HR": [
-    { r: "Country HR Manager", n: "Emma Watson", re: "e.watson@benline.com", t: "Review" },
-    { r: "Group Human Resource", n: "David Vance", re: "d.vance@benline.com", t: "Verify" },
-    { r: "Chief People Officer", n: "Sarah Jenkins", re: "s.jenkins@benline.com", t: "Approval" }
-  ],
-  "Finance & Treasury": [
-    { r: "Country Finance Manager", n: "Albert Tan", re: "a.tan@benline.com", t: "Review" },
-    { r: "Group Finance", n: "Marcus Aurelius", re: "m.aurelius@benline.com", t: "Verify" },
-    { r: "Chief Financial Officer", n: "Richard Branson", re: "r.branson@benline.com", t: "Approval" }
-  ],
-  "Legal & Compliance": [
-    { r: "Group Compliance", n: "Linda Lovelace", re: "l.lovelace@benline.com", t: "Review" },
-    { r: "Chief Compliance Officer", n: "Harvey Specter", re: "h.specter@benline.com", t: "Approval" }
-  ],
-  "Commercial": [
-    { r: "Country Manager", n: "John Doe", re: "j.doe@benline.com", t: "Review" },
-    { r: "Group Managing Director - Logistics", n: "Alan Clark", re: "a.clark@benline.com", t: "Verify" },
-    { r: "Chief Operating Officer", n: "Mike Ross", re: "m.ross@benline.com", t: "Approval" }
-  ],
-  "IT & Technology": [
-    { r: "Group Technology", n: "Linus Torvalds", re: "l.torvalds@benline.com", t: "Review" },
-    { r: "Business Technology & Architecture Committee (BTAC)", n: "BTAC Board", re: "btac@benline.com", t: "Verify" },
-    { r: "Chief Technology Officer", n: "Satya Nadella", re: "s.nadella@benline.com", t: "Approval" }
-  ],
-  "HSSE & Insurance": [
-    { r: "Group Risk, HSEQ & Insurance", n: "Rob Stark", re: "r.stark@benline.com", t: "Review" },
-    { r: "Chief Operating Officer", n: "Mike Ross", re: "m.ross@benline.com", t: "Approval" }
-  ],
-  "Group Procurement": [
-    { r: "Group Central Procurement", n: "Peter Pan", re: "p.pan@benline.com", t: "Review" },
-    { r: "Group Procurement Officer", n: "Gordon Ramsay", re: "g.ramsay@benline.com", t: "Approval" }
-  ]
-};
+            .nbadge {
+                margin-left: auto;
+                background: #e25555;
+                color: #fff;
+                font-size: 10px;
+                font-weight: 600;
+                padding: 1px 5px;
+                border-radius: 8px;
+                display: none
+            }
 
-let reqs = [
-  {
-    id: "DOA-2024-001",
-    sub: "Approve Non-Standard Liability Clauses - DHL Global Tender",
-    area: "Commercial",
-    cat: "Customer Contracts",
-    scat: "Non-Standard Liability Clauses",
-    co: "Singapore",
-    lim: "Liability Cap USD 2M",
-    purpose: "Strategic tender expansion request for regional DHL logistics line. Customer requested 2x contract value liability mapping instead of our baseline standard caps.",
-    sb: "Jonathan Kwok (Commercial Lead)",
-    dt: "2024-11-01 09:14",
-    st: "PENDING",
-    apvs: [
-      { r: "Country Manager", n: "John Doe", re: "j.doe@benline.com", t: "Review", st: "APPROVED", dt: "2024-11-01 14:20" },
-      { r: "Group Managing Director - Logistics", n: "Alan Clark", re: "a.clark@benline.com", t: "Verify", st: "PENDING", dt: "" },
-      { r: "Chief Operating Officer", n: "Mike Ross", re: "m.ross@benline.com", t: "Approval", st: "PENDING", dt: "" }
-    ]
-  },
-  {
-    id: "DOA-2024-002",
-    sub: "Unplanned Strategic HR Remuneration Alignment Project",
-    area: "HR",
-    cat: "Recruitment",
-    scat: "Salary Thresholds",
-    co: "Group",
-    lim: "US$ 165,000 pa",
-    purpose: "Critical execution pipeline setup requiring unbudgeted executive benchmark allocations across the maritime logistics desk functions.",
-    sb: "Amelia Earhart (HR Director)",
-    dt: "2024-10-28 11:02",
-    st: "APPROVED",
-    apvs: [
-      { r: "Country HR Manager", n: "Emma Watson", re: "e.watson@benline.com", t: "Review", st: "APPROVED", dt: "2024-10-28 12:00" },
-      { r: "Group Human Resource", n: "David Vance", re: "d.vance@benline.com", t: "Verify", st: "APPROVED", dt: "2024-10-29 09:15" },
-      { r: "Chief People Officer", n: "Sarah Jenkins", re: "s.jenkins@benline.com", t: "Approval", st: "APPROVED", dt: "2024-10-30 16:45" }
-    ]
-  }
-];
+            .suser {
+                padding: 12px 18px;
+                border-top: 1px solid rgba(255,255,255,.12);
+                font-size: 11px;
+                opacity: .6
+            }
 
-let rf = { st: "ALL" };
+            .suser strong {
+                display: block;
+                font-size: 12px;
+                opacity: 1;
+                margin-bottom: 1px
+            }
 
-function init(){
-  const ae = document.getElementById('area');
-  ae.innerHTML = Object.keys(srcData).map(k=>`<option value="${k}">${k}</option>`).join('');
-  renCat();
-  renderReqs();
-}
+            .main {
+                flex: 1;
+                padding: 28px 32px;
+                max-width: 1000px
+            }
 
-function renCat(){
-  const area = document.getElementById('area').value;
-  const ce = document.getElementById('cat');
-  if(srcData[area]){
-    ce.innerHTML = Object.keys(srcData[area]).map(k=>`<option value="${k}">${k}</option>`).join('');
-  } else {
-    ce.innerHTML = '';
-  }
-  renSub();
-}
+            .page {
+                display: none
+            }
 
-function renSub(){
-  const area = document.getElementById('area').value;
-  const cat = document.getElementById('cat').value;
-  const se = document.getElementById('scat');
-  if(srcData[area] && srcData[area][cat]){
-    se.innerHTML = srcData[area][cat].map(v=>`<option value="${v}">${v}</option>`).join('');
-  } else {
-    se.innerHTML = '';
-  }
-}
+            .page.active {
+                display: block
+            }
 
-function saveReq(e){
-  e.preventDefault();
-  const area = document.getElementById('area').value;
-  const baseApvs = apvMatrix[area] || [];
-  const instantiatedApvs = baseApvs.map((a, idx) => ({
-    ...a,
-    st: idx === 0 ? "PENDING" : "PENDING",
-    dt: ""
-  }));
+            .ph {
+                margin-bottom: 22px
+            }
 
-  const n = {
-    id: `DOA-2024-00${reqs.length + 1}`,
-    sub: document.getElementById('sub').value,
-    area: area,
-    cat: document.getElementById('cat').value,
-    scat: document.getElementById('scat').value,
-    co: document.getElementById('co').value,
-    lim: document.getElementById('lim').value || 'N/A',
-    purpose: document.getElementById('purpose').value,
-    sb: "Current User (Requester)",
-    dt: new Date().toISOString().replace('T',' ').substring(0,16),
-    st: "PENDING",
-    apvs: instantiatedApvs
-  };
-  
-  reqs.unshift(n);
-  resetForm();
-  renderReqs();
-  showT("Authority Request successfully routed into Matrix Pipeline.");
-}
+            .ph h2 {
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: -.02em
+            }
 
-function resetForm(){
-  document.getElementById('reqForm').reset();
-  init();
-}
+            .ph p {
+                color: var(--tx2);
+                font-size: 12px;
+                margin-top: 3px
+            }
 
-function renderReqs(){
-  const q = document.getElementById('srch').value.toLowerCase();
-  const b = document.getElementById('rtb');
-  b.innerHTML = '';
-  
-  const f = reqs.filter(x=>{
-    const mSt = rf.st === "ALL" || x.st === rf.st;
-    const mQ = x.sub.toLowerCase().includes(q) || x.id.toLowerCase().includes(q) || x.area.toLowerCase().includes(q) || x.cat.toLowerCase().includes(q);
-    return mSt && mQ;
-  });
+            .stats {
+                display: grid;
+                grid-template-columns: repeat(3,1fr);
+                gap: 10px;
+                margin-bottom: 22px
+            }
 
-  if(f.length===0){
-    b.innerHTML = `<tr><td colspan="5" class="no-data">No authorization tracking items match your criteria.</td></tr>`;
-    return;
-  }
+            .sc {
+                background: var(--sur);
+                border: .5px solid var(--bdr);
+                border-radius: var(--r);
+                padding: 13px 16px
+            }
 
-  f.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.className = 'clickable';
-    tr.onclick = () => openMo(r.id);
-    
-    let stCls = 'pnd';
-    if(r.st==='APPROVED') stCls='apv';
-    if(r.st==='REJECTED') stCls='rej';
+            .sc .sl {
+                font-size: 10px;
+                font-weight: 500;
+                color: var(--tx3);
+                text-transform: uppercase;
+                letter-spacing: .06em
+            }
 
-    let chainHtml = r.apvs.map(a=>{
-      let dotCls = 'pnd';
-      if(a.st==='APPROVED') dotCls='apv';
-      if(a.st==='REJECTED') dotCls='rej';
-      return `
-        <div class="apv-row">
-          <span class="apv-dot ${dotCls}"></span>
-          <span class="t-dim">${a.r}</span>
-          ${a.st==='PENDING' ? `<span class="apv-rem" onclick="event.stopPropagation();sendReminder('${r.id}','${a.r}')">Remind</span>` : ''}
-        </div>`;
-    }).join('');
+            .sc .sv {
+                font-size: 24px;
+                font-weight: 600;
+                letter-spacing: -.03em;
+                margin-top: 3px;
+                font-family: 'DM Mono',monospace
+            }
 
-    tr.innerHTML = `
-      <td class="m b">${r.id}</td>
-      <td>
-        <div class="b" style="font-size:13px;color:var(--ac)">${r.sub}</div>
-        <div class="t-dim" style="margin-top:2px">${r.area} &rarr; ${r.cat} &rarr; <span class="t-muted">${r.scat}</span></div>
-        <div class="t-muted" style="margin-top:2px">Context Matrix Range: <span class="b text-dark">${r.co||'Group'}</span> | Threshold: ${r.lim}</div>
-      </td>
-      <td><div>${r.sb}</div><div class="t-muted m">${r.dt}</div></td>
-      <td><div class="apv-chain">${chainHtml}</div></td>
-      <td><span class="badge ${stCls}">${r.st}</span></td>
-    `;
-    b.appendChild(tr);
-  });
-}
+            .sc .ss {
+                font-size: 10px;
+                color: var(--tx3);
+                margin-top: 1px
+            }
 
-function fltSt(v, btn){
-  document.querySelectorAll('#flts .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  rf.st=v;
-  renderReqs();
-}
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                font-size: 10px;
+                font-weight: 500;
+                padding: 2px 7px;
+                border-radius: 20px;
+                white-space: nowrap;
+                flex-shrink: 0
+            }
 
-function closeMo(){
-  document.getElementById('mo').classList.remove('open');
-}
+            .bg {
+                background: var(--grb);
+                color: var(--gr)
+            }
 
-function closeMoBg(e){
-  if(e.target===document.getElementById('mo')) closeMo();
-}
+            .br {
+                background: var(--rdb);
+                color: var(--rd)
+            }
 
-function showT(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
+            .bb {
+                background: var(--blb);
+                color: var(--bl)
+            }
 
-function sendReminder(reqId,role){
-  const r=reqs.find(x=>x.id===reqId), a=r.apvs.find(x=>x.r===role);
-  if(!a) return;
-  const to=a.re;
-  const subj=encodeURIComponent(`[REMINDER — DOA] ${r.sub} — Pending your ${a.t}`);
-  const body=encodeURIComponent(`Dear ${a.n||a.r},\n\nThis is a gentle reminder that your ${a.t} is still pending for the following action.\n\n────────────────────────────\nACTION:     ${r.sub}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co||'Group'}\n────────────────────────────\nPURPOSE / JUSTIFICATION:\n${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\nYOUR ROLE:  ${a.r}\nACTION:     ${a.t}\n────────────────────────────\n\nPlease reply to this email with your response.\n\nThank you,\n${r.sb}`);
-  window.open(`mailto:${to}?subject=${subj}&body=${body}`);
-  showT(`Reminder email trigger routed to client desktop client for ${a.n || a.r}`);
-}
+            .bw {
+                background: var(--amb);
+                color: var(--am)
+            }
 
-function openMo(id){
-  const r = reqs.find(x=>x.id===id);
-  if(!r) return;
-  
-  document.getElementById('m-id').textContent = r.id;
-  document.getElementById('m-tit').textContent = `Review Stream Context Checklist`;
-  
-  let stCls = 'pnd';
-  if(r.st==='APPROVED') stCls='apv';
-  if(r.st==='REJECTED') stCls='rej';
-  document.getElementById('m-st').className = `badge ${stCls}`;
-  document.getElementById('m-st').textContent = r.st;
-  
-  document.getElementById('m-dt').innerHTML = `<b>${r.dt}</b> from Area: <b>${r.co||'Group Core'}</b>`;
-  document.getElementById('m-ctx').innerHTML = `Functional Scope: <b>${r.area}</b> &nbsp;&middot;&nbsp; Category Interest: <b>${r.cat}</b> &nbsp;&middot;&nbsp; Focus Target: <b>${r.scat}</b><br>Mapped Value Constraint Limits: <b>${r.lim}</b>`;
-  document.getElementById('m-pur').textContent = r.purpose;
-  
-  let wfHtml = r.apvs.map(a=>{
-    let stCls = 'pnd';
-    if(a.st==='APPROVED') stCls='apv';
-    if(a.st==='REJECTED') stCls='rej';
-    
-    return `
-      <div class="apv-box">
-        <div class="apv-box-h">
-          <div><b>${a.r}</b> <span class="t-dim">(${a.n || 'Unassigned Role Stream'})</span></div>
-          <span class="badge ${stCls}">${a.st}</span>
-        </div>
-        <div class="display:flex; justify-content:between; align-items:center;">
-          <div class="t-muted">Required Action Flow: <span class="b" style="color:var(--ac)">${a.t}</span> &nbsp;|&nbsp; Contact Point: <span class="m">${a.re}</span></div>
-          ${a.st === 'PENDING' ? `
-            <div style="margin-top:8px; display:flex; gap:6px; justify-content:flex-end;">
-              <button class="sec" style="padding:3px 8px; font-size:11px; background:var(--rdb); color:var(--rd); border:none;" onclick="actionRole('${r.id}','${a.r}','REJECTED')">Reject</button>
-              <button class="prm" style="padding:3px 8px; font-size:11px; background:var(--gr); border:none;" onclick="actionRole('${r.id}','${a.r}','APPROVED')">Approve Action</button>
+            .bgr {
+                background: var(--sur2);
+                color: var(--tx2)
+            }
+
+            .bp {
+                background: var(--pub);
+                color: var(--pu)
+            }
+
+            .bt {
+                background: var(--tlb);
+                color: var(--tl)
+            }
+
+            .btn {
+                padding: 5px 11px;
+                border-radius: var(--rs);
+                font-size: 11px;
+                font-family: 'DM Sans',sans-serif;
+                font-weight: 500;
+                cursor: pointer;
+                border: .5px solid var(--bdr2);
+                background: var(--sur);
+                color: var(--tx);
+                transition: all .12s
+            }
+
+            .btn:hover {
+                background: var(--sur2)
+            }
+
+            .btn-ok {
+                border-color: #1a5c3a;
+                color: var(--gr)
+            }
+
+            .btn-ok:hover {
+                background: var(--grb)
+            }
+
+            .btn-ok.selected {
+                background: var(--grb);
+                border-width: 1.5px;
+                font-weight: 600
+            }
+
+            .btn-no.selected {
+                background: var(--rdb);
+                border-width: 1.5px;
+                font-weight: 600
+            }
+
+            .btn-dim {
+                opacity: 0.5
+            }
+
+            .btn-no {
+                border-color: #7a1e1e;
+                color: var(--rd)
+            }
+
+            .btn-no:hover {
+                background: var(--rdb)
+            }
+
+            .btn-q {
+                border-color: #7a4f00;
+                color: var(--am)
+            }
+
+            .btn-q:hover {
+                background: var(--amb)
+            }
+
+            .btn-p {
+                background: var(--ac);
+                color: #fff;
+                border-color: var(--ac);
+                padding: 7px 16px;
+                font-size: 12px
+            }
+
+            .btn-p:hover {
+                background: #16304f
+            }
+
+            .btn-em {
+                background: var(--blb);
+                color: var(--bl);
+                border-color: var(--bl);
+                font-size: 10px;
+                padding: 3px 8px
+            }
+
+            .btn-em:hover {
+                background: #c8d8f0
+            }
+
+            .fc {
+                background: var(--sur);
+                border: .5px solid var(--bdr);
+                border-radius: var(--r);
+                padding: 22px 26px;
+                max-width: 680px
+            }
+
+            .fr {
+                margin-bottom: 14px
+            }
+
+            .fl {
+                font-size: 11px;
+                font-weight: 500;
+                color: var(--tx2);
+                display: block;
+                margin-bottom: 4px
+            }
+
+            .fs,.fi,.fta {
+                width: 100%;
+                padding: 8px 11px;
+                border: .5px solid var(--bdr2);
+                border-radius: var(--rs);
+                font-size: 12px;
+                font-family: 'DM Sans',sans-serif;
+                color: var(--tx);
+                background: var(--sur);
+                appearance: none;
+                transition: border-color .15s
+            }
+
+            .fs:focus,.fi:focus,.fta:focus {
+                outline: none;
+                border-color: var(--ac)
+            }
+
+            .fs:disabled {
+                opacity: .4;
+                cursor: not-allowed
+            }
+
+            .fta {
+                resize: vertical;
+                min-height: 70px
+            }
+
+            .tc {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px
+            }
+
+            .amap {
+                background: var(--sur2);
+                border: .5px solid var(--bdr);
+                border-radius: var(--r);
+                padding: 14px 16px;
+                margin-top: 16px
+            }
+
+            .amap h4 {
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--tx2);
+                text-transform: uppercase;
+                letter-spacing: .06em;
+                margin-bottom: 12px
+            }
+
+            .lg {
+                margin-bottom: 12px
+            }
+
+            .ll {
+                font-size: 9px;
+                font-weight: 600;
+                color: var(--tx3);
+                text-transform: uppercase;
+                letter-spacing: .05em;
+                margin-bottom: 5px;
+                display: flex;
+                align-items: center;
+                gap: 5px
+            }
+
+            .ar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 6px 9px;
+                background: var(--sur);
+                border-radius: var(--rs);
+                margin-bottom: 3px;
+                gap: 6px;
+                border: .5px solid var(--bdr)
+            }
+
+            .rrow {
+                background: var(--sur);
+                border: .5px solid var(--bdr);
+                border-radius: var(--r);
+                padding: 12px 16px;
+                margin-bottom: 7px;
+                cursor: pointer;
+                transition: border-color .15s
+            }
+
+            .rrow:hover {
+                border-color: var(--bdr2);
+                box-shadow: 0 2px 6px rgba(0,0,0,.04)
+            }
+
+            .rt {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap
+            }
+
+            .rtitle {
+                font-size: 12px;
+                font-weight: 500;
+                flex: 1
+            }
+
+            .rm {
+                font-size: 10px;
+                color: var(--tx3);
+                margin-top: 4px
+            }
+
+            .pb {
+                height: 3px;
+                background: var(--bdr);
+                border-radius: 2px;
+                margin-top: 7px;
+                overflow: hidden
+            }
+
+            .pf {
+                height: 100%;
+                border-radius: 2px;
+                background: var(--gr);
+                transition: width .3s
+            }
+
+            .mo {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(26,25,22,.5);
+                z-index: 100;
+                align-items: flex-start;
+                justify-content: center;
+                padding: 28px 16px;
+                overflow-y: auto
+            }
+
+            .mo.open {
+                display: flex
+            }
+
+            .md {
+                background: var(--sur);
+                border-radius: var(--r);
+                width: 100%;
+                max-width: 680px;
+                padding: 22px 24px;
+                position: relative
+            }
+
+            .mc {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: var(--sur2);
+                border: none;
+                border-radius: 50%;
+                width: 26px;
+                height: 26px;
+                font-size: 14px;
+                cursor: pointer;
+                color: var(--tx2);
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+
+            .mc:hover {
+                background: var(--bdr)
+            }
+
+            .md h3 {
+                font-size: 15px;
+                font-weight: 600;
+                margin-bottom: 3px
+            }
+
+            .mm {
+                font-size: 11px;
+                color: var(--tx3);
+                margin-bottom: 14px
+            }
+
+            .ml {
+                margin-bottom: 12px
+            }
+
+            .mlh {
+                font-size: 9px;
+                font-weight: 600;
+                color: var(--tx3);
+                text-transform: uppercase;
+                letter-spacing: .05em;
+                margin-bottom: 6px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex-wrap: wrap
+            }
+
+            .ma {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                padding: 8px 11px;
+                background: var(--sur2);
+                border-radius: var(--rs);
+                margin-bottom: 3px;
+                flex-wrap: wrap
+            }
+
+            .mal {
+                flex: 1;
+                min-width: 0
+            }
+
+            .man {
+                font-size: 11px;
+                font-weight: 500
+            }
+
+            .mae {
+                font-size: 10px;
+                color: var(--tx3)
+            }
+
+            .maa {
+                display: flex;
+                gap: 4px;
+                flex-wrap: wrap;
+                align-items: center
+            }
+
+            .minf {
+                padding: 7px 10px;
+                background: #fffbf0;
+                border: .5px solid #e8dfc0;
+                border-radius: var(--rs);
+                margin-bottom: 3px;
+                font-size: 11px
+            }
+
+            .thr {
+                border-top: .5px solid var(--bdr);
+                padding-top: 12px;
+                margin-top: 12px
+            }
+
+            .tht {
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--tx3);
+                text-transform: uppercase;
+                letter-spacing: .06em;
+                margin-bottom: 8px
+            }
+
+            .tm {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 10px
+            }
+
+            .tav {
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                background: var(--acl);
+                color: var(--ac);
+                font-size: 9px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                font-family: 'DM Mono',monospace
+            }
+
+            .tb {
+                background: var(--sur2);
+                border-radius: 0 var(--r) var(--r) var(--r);
+                padding: 8px 10px;
+                flex: 1
+            }
+
+            .tb.mine {
+                background: var(--acl);
+                border-radius: var(--r) 0 var(--r) var(--r)
+            }
+
+            .tw {
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--tx2);
+                margin-bottom: 1px
+            }
+
+            .tt {
+                font-size: 12px
+            }
+
+            .ti {
+                font-size: 9px;
+                color: var(--tx3);
+                margin-top: 2px;
+                font-family: 'DM Mono',monospace
+            }
+
+            .rb {
+                margin-top: 8px
+            }
+
+            .rb textarea {
+                width: 100%;
+                padding: 7px 10px;
+                border: .5px solid var(--bdr2);
+                border-radius: var(--rs);
+                font-size: 12px;
+                font-family: 'DM Sans',sans-serif;
+                resize: vertical;
+                min-height: 55px;
+                color: var(--tx);
+                background: var(--sur)
+            }
+
+            .rb textarea:focus {
+                outline: none;
+                border-color: var(--ac)
+            }
+
+            .ras {
+                display: flex;
+                gap: 6px;
+                margin-top: 6px;
+                flex-wrap: wrap;
+                align-items: center
+            }
+
+            .mtbl {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 11px
+            }
+
+            .mtbl th {
+                background: var(--sur2);
+                border: .5px solid var(--bdr);
+                padding: 7px 9px;
+                text-align: left;
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--tx2);
+                white-space: nowrap
+            }
+
+            .mtbl td {
+                border: .5px solid var(--bdr);
+                padding: 6px 9px;
+                vertical-align: middle
+            }
+
+            .mtbl tr:hover td {
+                background: var(--sur2)
+            }
+
+            .tbr {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 14px;
+                align-items: center;
+                flex-wrap: wrap
+            }
+
+            .si {
+                padding: 6px 11px;
+                border: .5px solid var(--bdr2);
+                border-radius: var(--rs);
+                font-size: 12px;
+                font-family: 'DM Sans',sans-serif;
+                color: var(--tx);
+                background: var(--sur);
+                width: 200px
+            }
+
+            .si:focus {
+                outline: none;
+                border-color: var(--ac)
+            }
+
+            .fsel {
+                padding: 6px 11px;
+                border: .5px solid var(--bdr2);
+                border-radius: var(--rs);
+                font-size: 12px;
+                font-family: 'DM Sans',sans-serif;
+                color: var(--tx);
+                background: var(--sur)
+            }
+
+            .es {
+                text-align: center;
+                padding: 32px;
+                color: var(--tx3);
+                font-size: 12px
+            }
+
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--ac);
+                color: #fff;
+                padding: 10px 15px;
+                border-radius: var(--rs);
+                font-size: 12px;
+                font-weight: 500;
+                z-index: 300;
+                opacity: 0;
+                transition: opacity .3s;
+                pointer-events: none
+            }
+
+            .toast.show {
+                opacity: 1
+            }
+
+            .dvd {
+                height: .5px;
+                background: var(--bdr);
+                margin: 16px 0
+            }
+
+            .ib {
+                background: var(--blb);
+                border: .5px solid #c0d0e8;
+                border-radius: var(--rs);
+                padding: 10px 13px;
+                font-size: 11px;
+                color: var(--bl);
+                margin-bottom: 14px
+            }
+
+            .wb {
+                background: var(--amb);
+                border: .5px solid #e0c888;
+                border-radius: var(--rs);
+                padding: 10px 13px;
+                font-size: 11px;
+                color: var(--am);
+                margin-bottom: 12px
+            }
+
+            .seq {
+                display: flex;
+                align-items: center;
+                gap: 0;
+                margin: 8px 0;
+                flex-wrap: wrap
+            }
+
+            .ss {
+                display: flex;
+                align-items: center;
+                gap: 3px;
+                padding: 3px 8px;
+                border-radius: 20px;
+                font-size: 10px;
+                font-weight: 500;
+                background: var(--sur2);
+                color: var(--tx3);
+                border: .5px solid var(--bdr)
+            }
+
+            .ss.act {
+                background: var(--amb);
+                color: var(--am);
+                border-color: #e8c870
+            }
+
+            .ss.don {
+                background: var(--grb);
+                color: var(--gr);
+                border-color: #90d0a8
+            }
+
+            .ss.rej {
+                background: var(--rdb);
+                color: var(--rd);
+                border-color: #d09090
+            }
+
+            .sa {
+                font-size: 11px;
+                color: var(--tx3);
+                padding: 0 3px
+            }
+
+            .lov {
+                position: fixed;
+                inset: 0;
+                background: var(--bg);
+                z-index: 500;
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+
+            .lc {
+                background: var(--sur);
+                border: .5px solid var(--bdr);
+                border-radius: var(--r);
+                padding: 32px 36px;
+                width: 380px;
+                text-align: center
+            }
+
+            .lc h2 {
+                font-size: 19px;
+                font-weight: 600;
+                margin-bottom: 5px
+            }
+
+            .lc p {
+                font-size: 12px;
+                color: var(--tx2);
+                margin-bottom: 20px
+            }
+
+            .cgrid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+                gap: 10px
+            }
+
+            .cc {
+                background: var(--sur);
+                border: .5px solid var(--bdr);
+                border-radius: var(--r);
+                padding: 12px 14px;
+                display: flex;
+                gap: 10px;
+                align-items: flex-start
+            }
+
+            .ci {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: var(--acl);
+                color: var(--ac);
+                font-size: 10px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                font-family: 'DM Mono',monospace
+            }
+
+            .cn {
+                font-size: 12px;
+                font-weight: 500
+            }
+
+            .cr {
+                font-size: 10px;
+                color: var(--tx3);
+                margin-top: 1px
+            }
+
+            .ce {
+                font-size: 10px;
+                color: var(--bl);
+                margin-top: 2px
+            }
+
+            .tag {
+                display: inline-block;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-size: 9px;
+                font-weight: 500;
+                margin-top: 4px;
+                margin-right: 2px
+            }
+
+            .tl1 {
+                background: #f0e8fa;
+                color: #4a1a7a
+            }
+
+            .tl2 {
+                background: #e8eef8;
+                color: #1a3a6b
+            }
+
+            .tl3 {
+                background: #e6f2eb;
+                color: #1a5c3a
+            }
+
+            .tl4 {
+                background: #fdf3e0;
+                color: #7a4f00
+            }
+
+            .tl5 {
+                background: #fbe8e8;
+                color: #7a1e1e
+            }
+
+            .pt {
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--tx3);
+                text-transform: uppercase;
+                letter-spacing: .08em;
+                margin-bottom: 10px
+            }
+        </style>
+    </head>
+    <body>
+        <div class="lov" id="lov">
+            <div class="lc">
+                <h2>DOA Tracker</h2>
+                <p>Ben Line Group</p>
+                <div style="text-align:left;margin-bottom:16px">
+                    <div class="fr">
+                        <label class="fl">Your full name</label>
+                        <input class="fi" id="ln" placeholder="e.g. Gigi Chu"/>
+                    </div>
+                    <div class="fr">
+                        <label class="fl">Your email</label>
+                        <input class="fi" id="le" placeholder="gigi.chu@benline.com"/>
+                    </div>
+                    <div class="fr">
+                        <label class="fl">Your country</label>
+                        <select class="fs" id="lc2">
+                            <option value="">Select country</option>
+                            <option>Singapore</option>
+                            <option>China</option>
+                            <option>Hong Kong</option>
+                            <option>Taiwan</option>
+                            <option>Korea</option>
+                            <option>Japan</option>
+                            <option>Indonesia</option>
+                            <option>North America</option>
+                            <option>Canada</option>
+                            <option>India</option>
+                            <option>Sri Lanka</option>
+                            <option>Thailand</option>
+                            <option>Cambodia</option>
+                            <option>Philippines</option>
+                            <option>Vietnam</option>
+                            <option>Malaysia</option>
+                            <option>Bangladesh</option>
+                            <option>Australia</option>
+                            <option>Myanmar</option>
+                            <option>Brunei</option>
+                            <option>Group</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-p" style="width:100%" onclick="doLogin()">Enter DOA Tracker</button>
+                <div style="font-size:10px;color:var(--tx3);margin-top:10px">Data saved locally in this browser. Safe to test.</div>
             </div>
-          ` : `<div class="t-muted" style="margin-top:2px; font-style:italic; color:var(--gr)">Completed timestamp record: ${a.dt}</div>`}
         </div>
-      </div>
-    `;
-  }).join('');
-  
-  document.getElementById('m-wf').innerHTML = wfHtml;
-  document.getElementById('mo').classList.add('open');
-}
+        <div class="app" id="app" style="display:none">
+            <aside class="side">
+                <div class="slogo">
+                    <h1>DOA Tracker</h1>
+                    <p>Ben Line Group</p>
+                </div>
+                <nav class="snav">
+                    <div class="ni active" onclick="go('dashboard',this)">
+                        <span class="ndot"></span>
+                        Dashboard
+                    </div>
+                    <div class="ni" onclick="go('new',this)">
+                        <span class="ndot"></span>
+                        New Request
+                    </div>
+                    <div class="ni" onclick="go('reqs',this)">
+                        <span class="ndot"></span>
+                        My Requests <span class="nbadge" id="bopen">0</span>
+                    </div>
+                    <div class="ni" onclick="go('matrix',this)">
+                        <span class="ndot"></span>
+                        DOA Matrix
+                    </div>
+                    <div class="ni" onclick="go('contacts',this)">
+                        <span class="ndot"></span>
+                        Contacts
+                    </div>
+                </nav>
+                <div class="suser">
+                    <strong id="suname">—</strong>
+                    <span id="suemail"></span>
+                </div>
+                <div style="padding:10px 14px;border-top:1px solid rgba(255,255,255,.1)">
+                    <button onclick="clearAllData()" style="width:100%;padding:7px;background:rgba(122,30,30,.7);border:none;border-radius:6px;color:#fff;font-size:11px;font-family:DM Sans,sans-serif;cursor:pointer;font-weight:500">🗑 Clear all my data</button>
+                    <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:5px;text-align:center">Removes all saved requests & login</div>
+                </div>
+            </aside>
+            <main class="main">
+                <!-- DASHBOARD -->
+                <div class="page active" id="page-dashboard">
+                    <div class="ph">
+                        <h2 id="greet">Dashboard</h2>
+                        <p>Delegation of Authority — approval tracking</p>
+                    </div>
+                    <div class="stats">
+                        <div class="sc">
+                            <div class="sl">My open requests</div>
+                            <div class="sv" id="st1">0</div>
+                            <div class="ss">Submitted by me</div>
+                        </div>
+                        <div class="sc">
+                            <div class="sl">Pending approvals</div>
+                            <div class="sv" id="st2" style="color:var(--am)">0</div>
+                            <div class="ss">Awaiting response</div>
+                        </div>
+                        <div class="sc">
+                            <div class="sl">Completed</div>
+                            <div class="sv" id="st4" style="color:var(--gr)">0</div>
+                            <div class="ss">Fully approved</div>
+                        </div>
+                    </div>
+                    <div class="ib">
+                        💡 <strong>How it works:</strong>
+                        Submit a request → system shows required approvers by level → send Level 1 emails first → only after Level 1 is fully approved do Level 2 emails unlock → track each response here. Inform recipients are notified separately and do not block progress.
+                    </div>
+                    <div class="pt">Recent activity</div>
+                    <div id="dash-list"></div>
+                </div>
+                <!-- NEW REQUEST -->
+                <div class="page" id="page-new">
+                    <div class="ph">
+                        <h2>New DOA Request</h2>
+                        <p>Select your action — required approvers appear automatically</p>
+                    </div>
+                    <div class="fc">
+                        <div class="tc">
+                            <div class="fr">
+                                <label class="fl">Your name</label>
+                                <input class="fi" id="rname"/>
+                            </div>
+                            <div class="fr">
+                                <label class="fl">Your email</label>
+                                <input class="fi" id="remail"/>
+                            </div>
+                        </div>
+                        <div class="fr">
+                            <label class="fl">
+                                Country / entity <span style="color:var(--tx3);font-weight:400">(for Scope approvals)</span>
+                            </label>
+                            <select class="fs" id="rcountry">
+                                <option value="">Select country</option>
+                                <option>Singapore</option>
+                                <option>China</option>
+                                <option>Hong Kong</option>
+                                <option>Taiwan</option>
+                                <option>Korea</option>
+                                <option>Japan</option>
+                                <option>Indonesia</option>
+                                <option>North America</option>
+                                <option>Canada</option>
+                                <option>India</option>
+                                <option>Sri Lanka</option>
+                                <option>Thailand</option>
+                                <option>Cambodia</option>
+                                <option>Philippines</option>
+                                <option>Vietnam</option>
+                                <option>Malaysia</option>
+                                <option>Bangladesh</option>
+                                <option>Australia</option>
+                                <option>Myanmar</option>
+                                <option>Brunei</option>
+                                <option>Group</option>
+                            </select>
+                        </div>
+                        <div class="dvd"></div>
+                        <div class="fr">
+                            <label class="fl">Product / Function Scope</label>
+                            <select class="fs" id="sscope" onchange="onScope()">
+                                <option value="">Select scope</option>
+                                <option value="MAS">MAS (Marine Agency Services)</option>
+                                <option value="Liner">Liner (Liner Agency Services)</option>
+                                <option value="Logistics">Logistics</option>
+                                <option value="Group Compliance">Group Compliance</option>
+                                <option value="Group Transformation">Group Transformation</option>
+                                <option value="Group Technology">Group Technology</option>
+                                <option value="Group Risk">Group Risk, HSEQ & Insurance</option>
+                                <option value="Group HR">Group Human Resource</option>
+                                <option value="Group Finance">Group Finance</option>
+                                <option value="Group Procurement">Group Central Procurement</option>
+                                <option value="All">All / Group Level</option>
+                            </select>
+                        </div>
+                        <div class="fr">
+                            <label class="fl">Functional area</label>
+                            <select class="fs" id="sarea" onchange="onArea()" disabled>
+                                <option value="">— select scope first —</option>
+                            </select>
+                        </div>
+                        <div class="fr">
+                            <label class="fl">Category</label>
+                            <select class="fs" id="scat" onchange="onCat()" disabled>
+                                <option value="">— select area first —</option>
+                            </select>
+                        </div>
+                        <div class="fr">
+                            <label class="fl">Sub-category / action</label>
+                            <select class="fs" id="ssub" onchange="onSub()" disabled>
+                                <option value="">— select category first —</option>
+                            </select>
+                        </div>
+                        <div class="fr">
+                            <label class="fl">
+                                Purpose / justification <span style="color:var(--tx3);font-weight:400">(shown in emails to approvers)</span>
+                            </label>
+                            <textarea class="fta" id="rpurpose" placeholder="Describe why this action is needed and any relevant context..."></textarea>
+                        </div>
+                        <div id="amap" style="display:none">
+                            <div class="amap">
+                                <h4>Required approvals for this action</h4>
+                                <div id="alvls"></div>
+                            </div>
+                            <div style="margin-top:10px;padding:9px 12px;background:var(--sur2);border-radius:var(--rs);font-size:11px;color:var(--tx2)">
+                                <strong>Sequential:</strong>
+                                Level 1 emails go first. Level 2 only unlocks after all Level 1 approvals are received. Inform recipients notified at their level separately.
+                            </div>
+                            <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+                                <button class="btn btn-p" onclick="submitReq()">Submit Request</button>
+                                <button class="btn" onclick="clearForm()">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MY REQUESTS -->
+                <div class="page" id="page-reqs">
+                    <div class="ph">
+                        <h2>My Requests</h2>
+                        <p>All DOA requests you have submitted</p>
+                    </div>
+                    <div id="reqs-list"></div>
+                </div>
+                <!-- DOA MATRIX -->
+                <div class="page" id="page-matrix">
+                    <div class="ph">
+                        <h2>DOA Matrix</h2>
+                        <p>Approval rules — MAS & Liner Agency scope (test version)</p>
+                    </div>
+                    <div class="tbr">
+                        <input class="si" placeholder="Search matrix..." oninput="fMtx(this.value)"/>
+                        <select class="fsel" onchange="fMtxA(this.value)">
+                            <option value="">All areas</option>
+                            <option>HR</option>
+                            <option>Finance</option>
+                            <option>Procurement</option>
+                            <option>Technology</option>
+                            <option>Legal & Compliance</option>
+                        </select>
+                        <select class="fsel" onchange="fMtxT(this.value)">
+                            <option value="">All types</option>
+                            <option>Approval</option>
+                            <option>Multiple Approval</option>
+                            <option>Scope Approval</option>
+                            <option>Inform</option>
+                            <option>Scope Inform</option>
+                            <option>Inform & Consult</option>
+                            <option>Scope Inform & Consult</option>
+                        </select>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="mtbl">
+                            <thead>
+                                <tr>
+                                    <th>Area</th>
+                                    <th>Category</th>
+                                    <th>Sub-category / Action</th>
+                                    <th>Level</th>
+                                    <th>Role</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mtbl-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- CONTACTS -->
+                <div class="page" id="page-contacts">
+                    <div class="ph">
+                        <h2>Contacts</h2>
+                        <p>All approver contacts — Ben Line Group</p>
+                    </div>
+                    <div id="con-grid"></div>
+                </div>
+        </div>
+</main></div>
+<div class="mo" id="mo" onclick="closeMoBg(event)">
+    <div class="md" id="md">
+        <button class="mc" onclick="closeMo()">✕</button>
+        <div id="mb"></div>
+    </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+    // ── TEST ADDRESSES ──
 
-function actionRole(reqId, role, nextStatus){
-  const r = reqs.find(x=>x.id===reqId);
-  if(!r) return;
-  const a = r.apvs.find(x=>x.r===role);
-  if(!a) return;
-  
-  a.st = nextStatus;
-  a.dt = new Date().toISOString().replace('T',' ').substring(0,16);
-  
-  if(nextStatus === 'REJECTED'){
-    r.st = 'REJECTED';
-  } else {
-    const allApproved = r.apvs.every(x=>x.st === 'APPROVED');
-    if(allApproved) r.st = 'APPROVED';
-  }
-  
-  renderReqs();
-  openMo(reqId);
-  showT(`Workflow updated successfully. Node action set to ${nextStatus}.`);
-}
+    // ── DOA MATRIX (MAS + Liner focus — HR, Finance CAPEX, Procurement, Technology, Legal) ──
+    const DOA = [// ── HR > RECRUITMENT ──
+    {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Compliance',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Transformation',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Technology',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Risk, HSEQ & Insurance',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Finance',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 4,
+        r: 'Group Central Procurement',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Unplanned & Unbudgeted',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Expatriate',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Inform'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration over US$150k pa',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Salary Thresholds — Remuneration >US$100k <US$149,999 pa',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Engage Recruitment Consultants — Managerial level and above',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Multiple Approval'
+    }, {
+        a: 'HR',
+        c: 'Recruitment',
+        s: 'Engage Recruitment Consultants — Managerial level and above',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    // ── HR > PAYROLL / SALARY ──
+    {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Inform'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Off-cycle salary review',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Annual Increment',
+        lv: 1,
+        r: 'Remuneration Committee',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Regulatory pension arrangements',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Regulatory pension arrangements',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Regulatory pension arrangements',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Inform'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Regulatory pension arrangements',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Inform'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Regulatory pension arrangements',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Inform'
+    },
+    {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Non-regulatory pension arrangements',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Non-regulatory pension arrangements',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Non-regulatory pension arrangements',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Non-regulatory pension arrangements',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Payroll / Salary',
+        s: 'Non-regulatory pension arrangements',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    // ── HR > POLICY / HANDBOOK ──
+    {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Group',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Group',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Group',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Country',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Country',
+        lv: 5,
+        r: 'Country HR Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Country',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Policy / Handbook (Changes to)',
+        s: 'Country',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    // ── HR > PROMOTIONS ──
+    {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform'
+    }, {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Inform'
+    }, {
+        a: 'HR',
+        c: 'Promotions',
+        s: 'Manager & Above',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    // ── HR > REDUNDANCY ──
+    {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 6 & 7',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 5',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 5',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 5',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 5',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 5',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: Level 5',
+        lv: 2,
+        r: 'Chief People Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: below Level 5',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: below Level 5',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: below Level 5',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: below Level 5',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'HR',
+        c: 'Redundancy',
+        s: 'Redundancy & Termination: below Level 5',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    // ── FINANCE > ANNUAL BUDGET ──
+    {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Compliance',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Transformation',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Technology',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Risk, HSEQ & Insurance',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Finance',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 4,
+        r: 'Group Central Procurement',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Annual Budget',
+        s: 'Approval of Annual Budget',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    // ── FINANCE > CAPEX ──
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Inform'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $1 Million',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $100K < $1 Million',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $100K < $1 Million',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $100K < $1 Million',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $100K < $1 Million',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $100K < $1 Million',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend > $100K < $1 Million',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend < $100K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend < $100K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend < $100K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Non Technology Spend < $100K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Technology Spend > $1 Million',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Technology Spend > $1 Million',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Technology Spend > $1 Million',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Technology Spend > $100K < $1 Million',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Technology Spend < $100K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Budgeted — Budgeted Technology Spend < $100K',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $250K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $250K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $250K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $250K',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $25K < $250K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $25K < $250K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $25K < $250K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $25K < $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend > $25K < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend < $25K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend < $25K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend < $25K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Non Technology Spend < $25K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Technology Spend > $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Technology Spend > $250K',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Technology Spend > $250K',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Technology Spend > $25K < $250K',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Technology Spend < $25K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Unbudgeted — Unbudgeted Technology Spend < $25K',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Asset Disposal — Asset Value > $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Asset Disposal — Asset Value > $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Asset Disposal — Asset Value > $250K',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Asset Disposal — Asset Value > $25K < $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Asset Disposal — Asset Value > $25K < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'CAPEX',
+        s: 'Asset Disposal — Asset Value < $25K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    // ── FINANCE > INVESTMENTS ──
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Country',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Country',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Country',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Country',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Company — Share capital thresholds > $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Company — Share capital thresholds > $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Company — Share capital thresholds > $250K',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Company — Share capital thresholds < $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'New Company — Share capital thresholds < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Existing company — Share capital increase > $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Existing company — Share capital increase > $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Existing company — Share capital increase > $250K',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Existing company — Share capital increase < $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Existing company — Share capital increase < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Investment Loans',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Investment Loans',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Investment Loans',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Bonds',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Bonds',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Investments',
+        s: 'Bonds',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    // ── FINANCE > BANKING & FINANCIAL INSTRUMENTS ──
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Accounts',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Accounts',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Multiple Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Accounts',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Multiple Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Authorisation — Authorization Matrix Changes',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Authorisation — Authorization Matrix Changes',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Multiple Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Authorisation — Authorization Matrix Changes',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Multiple Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Authorisation — Financing Agreements (Loans, Credit Lines, Leases)',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Authorisation — Financing Agreements (Loans, Credit Lines, Leases)',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Multiple Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank Authorisation — Financing Agreements (Loans, Credit Lines, Leases)',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Multiple Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Loans — Short-term loans (<3 months)',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Loans — Long term loans (>3 months) > $500K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Loans — Long term loans (>3 months) > $500K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Loans — Long term loans (>3 months) > $250K < $500K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Loans — Long term loans (>3 months) > $250K < $500K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Loans — Long term loans (>3 months) < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Corporate Credit Cards',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Corporate Credit Cards',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank / Corporate Guarantees > $1M',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank / Corporate Guarantees > $1M',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank / Corporate Guarantees > $1M',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank / Corporate Guarantees > $250K < $1M',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank / Corporate Guarantees > $250K < $1M',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Banking & Financial instruments',
+        s: 'Bank / Corporate Guarantees < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    // ── FINANCE > CUSTOMER CREDIT TERMS ──
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit for appointments with no pre funding received',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit for appointments with no pre funding received',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit for appointments with no pre funding received',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit for appointments with no pre funding received',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals > $50K',
+        lv: 4,
+        r: 'Group Finance',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals > $50K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals > $50K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals > $10K < $50K',
+        lv: 4,
+        r: 'Group Finance',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals > $10K < $50K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals > $10K < $50K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals < $10K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Term Approvals < $10K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Material Principal / Customer Credit Limits (controlled by BLA)',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Material Principal / Customer Credit Limits (controlled by BLA)',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Material Principal / Customer Credit Limits (controlled by BLA)',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Material Principal / Customer Credit Limits (controlled by BLA)',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes > $10K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes > $10K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes > $10K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes > $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes < $10K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes < $10K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Credit Notes < $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off > $10K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off > $10K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off > $10K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off > $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off < $10K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off < $10K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Bad Debt Write Off < $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Suspense Account Writeback > 14 days',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Suspense Account Writeback > 14 days',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Suspense Account Writeback > 14 days',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Suspense Account Writeback < 14 days',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Suspense Account Writeback < 14 days',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Agencies — Suspense Account Writeback < 14 days',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Limit Approvals > $10K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Limit Approvals > $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Limit Approvals < $10K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Limit Approvals < $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Term Approvals > 60 days',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Term Approvals > 60 days',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Term Approvals > 60 days',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Term Approvals < 60 days',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Term Approvals < 60 days',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Notes > $10K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Notes > $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Notes < $10K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Credit Notes < $10K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $250K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $250K',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $50K < $250K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $50K < $250K',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off > $50K < $250K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off < $50K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Customer credit terms',
+        s: 'Logistics — Bad Debt Write Off < $50K',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    },
+    // ── FINANCE > INSURANCE ──
+    {
+        a: 'Finance',
+        c: 'Insurance',
+        s: 'Group Policy Renewals & Updates',
+        lv: 4,
+        r: 'Group Risk, HSEQ & Insurance',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Insurance',
+        s: 'Group Policy Renewals & Updates',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Insurance',
+        s: 'Group Policy Renewals & Updates',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Finance',
+        c: 'Insurance',
+        s: 'Country Policy Renewals & Updates',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Insurance',
+        s: 'Country Policy Renewals & Updates',
+        lv: 4,
+        r: 'Group Risk, HSEQ & Insurance',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Insurance',
+        s: 'Country Policy Renewals & Updates',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    // ── FINANCE > AUDITORS ──
+    {
+        a: 'Finance',
+        c: 'Appointment and removal of Group & Country Auditors',
+        s: 'Appointment and removal of Group & Country Auditors',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Finance',
+        c: 'Appointment and removal of Group & Country Auditors',
+        s: 'Appointment and removal of Group & Country Auditors',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Appointment and removal of Group & Country Auditors',
+        s: 'Appointment and removal of Group & Country Auditors',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Finance',
+        c: 'Appointment and removal of Group & Country Auditors',
+        s: 'Appointment and removal of Group & Country Auditors',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    // ── PROCUREMENT > VENDOR MANAGEMENT ──
+    {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Accreditation',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Accreditation',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Accreditation',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Accreditation',
+        lv: 2,
+        r: 'Group Procurement Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Creation',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Creation',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Creation',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Inform & Consult'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Creation',
+        lv: 2,
+        r: 'Group Procurement Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Suspension / Blacklisting / Reinstatement',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Suspension / Blacklisting / Reinstatement',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Suspension / Blacklisting / Reinstatement',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Suspension / Blacklisting / Reinstatement',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Suspension / Blacklisting / Reinstatement',
+        lv: 2,
+        r: 'Group Procurement Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Framework Agreement',
+        lv: 4,
+        r: 'Group Central Procurement',
+        t: 'Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Vendor Management',
+        s: 'Vendor Framework Agreement',
+        lv: 2,
+        r: 'Group Procurement Officer',
+        t: 'Approval'
+    },
+    // ── PROCUREMENT > NON-TRADE PURCHASE ──
+    {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Compliance',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Transformation',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Technology',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Risk, HSEQ & Insurance',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Finance',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Central Procurement',
+        t: 'Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase > US$15K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase < US$15K',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase < US$15K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase < US$15K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Non-Trade Purchase',
+        s: 'Non-Trade Purchase < US$15K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    // ── PROCUREMENT > TRADE PURCHASE ──
+    {
+        a: 'Procurement',
+        c: 'Trade Purchase',
+        s: 'Trade Purchase > US$15K',
+        lv: 4,
+        r: 'Group Central Procurement',
+        t: 'Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Trade Purchase',
+        s: 'Trade Purchase > US$15K',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Trade Purchase',
+        s: 'Trade Purchase > US$15K',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Trade Purchase',
+        s: 'Trade Purchase > US$15K',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    },
+    {
+        a: 'Procurement',
+        c: 'Trade Purchase',
+        s: 'Trade Purchase < US$15K',
+        lv: 5,
+        r: 'Country Finance Manager',
+        t: 'Scope Approval'
+    },
+    // ── PROCUREMENT > PROPERTY LEASE ──
+    {
+        a: 'Procurement',
+        c: 'Property Lease',
+        s: 'Property Lease Approvals',
+        lv: 5,
+        r: 'Country Manager',
+        t: 'Scope Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Property Lease',
+        s: 'Property Lease Approvals',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Procurement',
+        c: 'Property Lease',
+        s: 'Property Lease Approvals',
+        lv: 2,
+        r: 'Group Procurement Officer',
+        t: 'Approval'
+    },
+    // ── TECHNOLOGY > TECHNOLOGY PROJECTS ──
+    {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Project Charters with technology components including Group SaaS licencing and technology development',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Project Charters with technology components including Group SaaS licencing and technology development',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Procurement and lifecycle management of end-user computing hardware, including laptops, mobile devices, and peripherals, within approved budget',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Procurement and lifecycle management of end-user computing hardware, including laptops, mobile devices, and peripherals, within approved budget',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Procurement and lifecycle management of end-user computing hardware, including laptops, mobile devices, and peripherals, within approved budget',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Procurement and lifecycle management of end-user computing hardware, including laptops, mobile devices, and peripherals, within approved budget',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Procurement and lifecycle management of end-user computing hardware, including laptops, mobile devices, and peripherals, within approved budget',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Purchase and activation of SaaS licences not in Technology catalogue',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Technology projects',
+        s: 'Purchase and activation of SaaS licences not in Technology catalogue',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    // ── TECHNOLOGY > PROCUREMENT AND LIFECYCLE ──
+    {
+        a: 'Technology',
+        c: 'Procurement and Lifecycle Management',
+        s: 'Procurement and Lifecycle Management',
+        lv: 2,
+        r: 'Chief Financial Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Procurement and Lifecycle Management',
+        s: 'Procurement and Lifecycle Management',
+        lv: 2,
+        r: 'BTAC',
+        t: 'Approval'
+    },
+    // ── TECHNOLOGY > CYBERSECURITY ──
+    {
+        a: 'Technology',
+        c: 'Cybersecurity & Risk',
+        s: 'Cybersecurity & Risk Management',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Cybersecurity & Risk',
+        s: 'Cybersecurity & Risk Management',
+        lv: 2,
+        r: 'Chief Technology Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Cybersecurity & Risk',
+        s: 'Cybersecurity & Risk Management',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    // ── TECHNOLOGY > DATA MANAGEMENT ──
+    {
+        a: 'Technology',
+        c: 'Data Management & Integration',
+        s: 'Data Management & Integration',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Data Management & Integration',
+        s: 'Data Management & Integration',
+        lv: 2,
+        r: 'Chief Technology Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Data Management & Integration',
+        s: 'Data Management & Integration',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    }, {
+        a: 'Technology',
+        c: 'Data Management & Integration',
+        s: 'Data Management & Integration',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    // ── LEGAL & COMPLIANCE > GENERAL ──
+    {
+        a: 'Legal & Compliance',
+        c: 'General',
+        s: 'Approval to engage external Legal Counsel',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'General',
+        s: 'Letters of Intent (with no financial or contractual commitment) — Ben Line Group Standard',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Inform & Consult'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'General',
+        s: 'Letters of Intent with financial or contractual commitment or amendment to Ben Line Group Standard',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Inform & Consult'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'General',
+        s: 'Non Disclosure Agreements — Ben Line Group Standard',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Inform & Consult'
+    },
+    // ── LEGAL & COMPLIANCE > CONTRACT LIFECYCLE ──
+    {
+        a: 'Legal & Compliance',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Overall Contract Lifecycle Management of all customer & third-party contracts (new, renew, terminate)',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Overall Contract Lifecycle Management of all customer & third-party contracts (new, renew, terminate)',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Review and approve any non Ben Line Group Standard templates, contractual terms and/or deviations',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Review and approve any non Ben Line Group Standard templates, contractual terms and/or deviations',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    // ── LEGAL & COMPLIANCE > COMPLIANCE OBLIGATIONS ──
+    {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Drafting of all new or materially revised group policies related to Compliance',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Drafting of all new or materially revised group policies related to Compliance',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval & Issuance of all new or materially revised group policies related to Compliance',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval & Issuance of all new or materially revised group policies related to Compliance',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval & Issuance of all new or materially revised group policies related to Compliance',
+        lv: 1,
+        r: 'Board of Directors',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of gifts, hospitality, entertainment, donations, sponsorships, and third-party engagements requiring Compliance review',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of gifts, hospitality, entertainment, donations, sponsorships, and third-party engagements requiring Compliance review',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of transactions, customers, suppliers, vessels, routes, or cargo requiring sanctions review',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of transactions, customers, suppliers, vessels, routes, or cargo requiring sanctions review',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of declared conflicts of interest and related mitigation measures',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of declared conflicts of interest and related mitigation measures',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Compliance Obligations',
+        s: 'Approval of whistleblowing case closure for medium/high-risk cases and changes to the whistleblowing system or reporting channel',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    // ── LEGAL & COMPLIANCE > DATA PRIVACY ──
+    {
+        a: 'Legal & Compliance',
+        c: 'Data Privacy & Information Handling',
+        s: 'Draft, approve, manage data processing agreements (DPAs), Data Protection Impact Assessments (DPIAs)',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Data Privacy & Information Handling',
+        s: 'Draft, approve, manage data processing agreements (DPAs), Data Protection Impact Assessments (DPIAs)',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Data Privacy & Information Handling',
+        s: 'Approval of new systems, tools, or vendors that process personal data, including privacy and security controls',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Data Privacy & Information Handling',
+        s: 'Approval of new systems, tools, or vendors that process personal data, including privacy and security controls',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Data Privacy & Information Handling',
+        s: 'Data breach investigations / notifications — approval for notifications to authorities or affected individuals',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Data Privacy & Information Handling',
+        s: 'Data breach investigations / notifications — approval for notifications to authorities or affected individuals',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    // ── LEGAL & COMPLIANCE > LEGAL OVERSIGHT ──
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Appointment of external counsel for advisory, litigation, investigation, legal notices, and regulatory matters',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Appointment of external counsel for advisory, litigation, investigation, legal notices, and regulatory matters',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 4,
+        r: 'Group Human Resource',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (Employees)',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Commencement or termination of Litigation, disputes and claims (non Employment related)',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Authority to issue demand letters, or responses',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Authority to issue demand letters, or responses',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Approval to respond to regulators, authorities, or government agencies',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Approval to respond to regulators, authorities, or government agencies',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Approval of submissions, disclosures, and settlement positions',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal Oversight & External Counsel',
+        s: 'Approval of submissions, disclosures, and settlement positions',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    // ── LEGAL & COMPLIANCE > ADMINISTRATIVE AUTHORITY ──
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to approve internal investigations, including scope and resourcing',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to approve internal investigations, including scope and resourcing',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to approve the retention of specialised advisors supporting investigations, privacy, sanctions, ABAC, or governance assessments',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to approve the retention of specialised advisors supporting investigations, privacy, sanctions, ABAC, or governance assessments',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to approve compliance, data privacy audit scope, findings, corrective actions',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to sign official representations, certifications, or declarations on behalf of the company relating to Legal/Compliance matters',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, {
+        a: 'Legal & Compliance',
+        c: 'Legal & Compliance Administrative Authority',
+        s: 'Authority to sign official representations, certifications, or declarations on behalf of the company relating to Legal/Compliance matters',
+        lv: 2,
+        r: 'Chief Compliance Officer',
+        t: 'Approval'
+    },
+    // ── CUSTOMER CONTRACTS ──
+    {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 3,
+        r: 'Group MD — Logistics',
+        t: 'Scope Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 3,
+        r: 'Group GM — Marine Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 3,
+        r: 'Group GM — Liner Agency Services',
+        t: 'Scope Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 2,
+        r: 'Chief Executive Officer',
+        t: 'Approval'
+    }, {
+        a: 'Customer Contracts',
+        c: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        s: 'Changes & Amendments to Contract Lifecycle process and approvals',
+        lv: 2,
+        r: 'Chief Operating Officer',
+        t: 'Approval'
+    }, ];
 
-window.onload = init;
+    // ── CONTACTS ──
+    const CONS = [// ── GROUP / EXECUTIVE ──
+    {
+        n: 'Kristian Vandermeer',
+        r: 'Chief Executive Officer',
+        e: 'kristian.vandermeer@benline.com',
+        lv: 2
+    }, {
+        n: 'CK Tan',
+        r: 'Chief Financial Officer',
+        e: 'ck.tan@benline.com',
+        lv: 2
+    }, {
+        n: 'Budi Djojo',
+        r: 'Chief Technology Officer',
+        e: 'budi.djojo@benline.com',
+        lv: 2
+    }, {
+        n: 'Peter Kiddle',
+        r: 'Chief Operating Officer',
+        e: 'peter.kiddle@benline.com',
+        lv: 2
+    }, {
+        n: 'Daniel Pitts',
+        r: 'Chief People Officer',
+        e: 'daniel.pitts@benline.com',
+        lv: 2
+    }, {
+        n: 'Therry Van Vreden',
+        r: 'Chief Compliance Officer',
+        e: 'therry.vanvreden@benline.com',
+        lv: 2
+    }, {
+        n: 'Jan Piskadlo',
+        r: 'Group Procurement Officer',
+        e: 'jan.piskadlo@benline.com',
+        lv: 2
+    }, {
+        n: 'Board of Directors',
+        r: 'Board of Directors',
+        e: 'kristian.vandermeer@benline.com',
+        lv: 1
+    }, {
+        n: 'Remuneration Committee',
+        r: 'Remuneration Committee',
+        e: 'kristian.vandermeer@benline.com',
+        lv: 1
+    }, // ── LEVEL 3 — PRODUCT ──
+    {
+        n: 'Alan Mossman',
+        r: 'Group MD — Logistics',
+        e: 'alan.mossman@benline.com',
+        lv: 3
+    }, {
+        n: 'Phillip Denham',
+        r: 'Group GM — Liner Agency Services',
+        e: 'phillip.denham@benline.com',
+        lv: 3
+    }, {
+        n: 'Edward Barry',
+        r: 'Group GM — Marine Agency Services',
+        e: 'edward.barry@benline.com',
+        lv: 3
+    }, // ── LEVEL 4 — FUNCTIONS ──
+    {
+        n: 'Mayga Subramaniam',
+        r: 'Group Compliance',
+        e: 'mayga.subramaniam@benline.com',
+        lv: 4
+    }, {
+        n: 'Jennifer Quek',
+        r: 'Group Transformation',
+        e: 'jennifer.quek@benline.com',
+        lv: 4
+    }, {
+        n: 'Budi Djojo',
+        r: 'Group Technology',
+        e: 'budi.djojo@benline.com',
+        lv: 4
+    }, {
+        n: 'Jason Ello',
+        r: 'Group Risk, HSEQ & Insurance',
+        e: 'jason.elllo@benline.com',
+        lv: 4
+    }, {
+        n: 'Nicole Huang',
+        r: 'Group Human Resource',
+        e: 'nicole.huang@benline.com',
+        lv: 4
+    }, {
+        n: 'Vinay Devadiga',
+        r: 'Group Finance',
+        e: 'vinay.devadiga@benline.com',
+        lv: 4
+    }, {
+        n: 'Jan Piskadlo',
+        r: 'Group Central Procurement',
+        e: 'jan.piskadlo@benline.com',
+        lv: 4
+    }, {
+        n: 'Budi Djojo',
+        r: 'BTAC',
+        e: 'budi.djojo@benline.com',
+        lv: 4
+    }, // ── LEVEL 5 — SINGAPORE ──
+    {
+        n: 'Philip Denham',
+        r: 'Country Manager',
+        e: 'phillip.denham@benline.com',
+        lv: 5,
+        co: 'Singapore'
+    }, {
+        n: 'Puay Kah Low',
+        r: 'Country HR Manager',
+        e: 'low.puaykah@benline.com',
+        lv: 5,
+        co: 'Singapore'
+    }, {
+        n: 'Jennifer Quek',
+        r: 'Country Finance Manager',
+        e: 'jennifer.quek@benline.com',
+        lv: 5,
+        co: 'Singapore'
+    }, // ── LEVEL 5 — CHINA ──
+    {
+        n: 'Daniel Pitts',
+        r: 'Country Manager',
+        e: 'daniel.pitts@benline.com',
+        lv: 5,
+        co: 'China'
+    }, {
+        n: 'Yvonne Xu',
+        r: 'Country HR Manager',
+        e: 'yvonne.xu@benline.com',
+        lv: 5,
+        co: 'China'
+    }, {
+        n: 'Serena Chen',
+        r: 'Country Finance Manager',
+        e: 'serena.chen@benline.com',
+        lv: 5,
+        co: 'China'
+    }, // ── LEVEL 5 — HONG KONG ──
+    {
+        n: 'Daniel Pitts',
+        r: 'Country Manager',
+        e: 'daniel.pitts@benline.com',
+        lv: 5,
+        co: 'Hong Kong'
+    }, {
+        n: 'Joan Lau',
+        r: 'Country HR Manager',
+        e: 'joan.lau@benline.com',
+        lv: 5,
+        co: 'Hong Kong'
+    }, // ── LEVEL 5 — TAIWAN ──
+    {
+        n: 'Wilson Ng',
+        r: 'Country Manager',
+        e: 'wilson.ng@benline.com',
+        lv: 5,
+        co: 'Taiwan'
+    }, {
+        n: 'Linda Chang',
+        r: 'Country HR Manager',
+        e: 'linda.chang@benline.com',
+        lv: 5,
+        co: 'Taiwan'
+    }, {
+        n: 'Sharon Wang',
+        r: 'Country Finance Manager',
+        e: 'sharon.wang@benline.com',
+        lv: 5,
+        co: 'Taiwan'
+    }, // ── LEVEL 5 — KOREA ──
+    {
+        n: 'Kristian Vandermeer',
+        r: 'Country Manager',
+        e: 'kristian.vandermeer@benline.com',
+        lv: 5,
+        co: 'Korea'
+    }, {
+        n: 'Taewan Jeong',
+        r: 'Country HR Manager',
+        e: 'taewan.jeong@benline.com',
+        lv: 5,
+        co: 'Korea'
+    }, {
+        n: 'Ami Yun',
+        r: 'Country Finance Manager',
+        e: 'ami.yun@benline.com',
+        lv: 5,
+        co: 'Korea'
+    }, // ── LEVEL 5 — JAPAN ──
+    {
+        n: 'Joe Nakaue',
+        r: 'Country Manager',
+        e: 'joe.nakaue@benline.com',
+        lv: 5,
+        co: 'Japan'
+    }, {
+        n: 'Yukinori Hashimoto',
+        r: 'Country HR Manager',
+        e: 'yukinori.hashimoto@benline.com',
+        lv: 5,
+        co: 'Japan'
+    }, {
+        n: 'Hideki Yoshioka',
+        r: 'Country Finance Manager',
+        e: 'hideki.yoshioka@benline.com',
+        lv: 5,
+        co: 'Japan'
+    }, // ── LEVEL 5 — INDONESIA ──
+    {
+        n: 'Nuri Syahfitri',
+        r: 'Country Manager',
+        e: 'nuri.syahfitri@benline.com',
+        lv: 5,
+        co: 'Indonesia'
+    }, {
+        n: 'Robby Rubyanto',
+        r: 'Country HR Manager',
+        e: 'robby.rubyanto@benline.com',
+        lv: 5,
+        co: 'Indonesia'
+    }, // ── LEVEL 5 — NORTH AMERICA ──
+    {
+        n: 'Thomas Paterson',
+        r: 'Country Manager',
+        e: 'thomas.paterson@benline.com',
+        lv: 5,
+        co: 'North America'
+    }, {
+        n: 'Kyle Yuen',
+        r: 'Country HR Manager',
+        e: 'kyle.yuen@benline.com',
+        lv: 5,
+        co: 'North America'
+    }, // ── LEVEL 5 — CANADA ──
+    {
+        n: 'Daniel Salgado',
+        r: 'Country Manager',
+        e: 'daniel.salgado@benline.com',
+        lv: 5,
+        co: 'Canada'
+    }, // ── LEVEL 5 — INDIA ──
+    {
+        n: 'Sanjay Wadhwa',
+        r: 'Country Manager',
+        e: 'sanjay.wadhwa@benline.com',
+        lv: 5,
+        co: 'India'
+    }, {
+        n: 'Gautum Krishnamurthy',
+        r: 'Country HR Manager',
+        e: 'gautum.krishnamurthy@benline.com',
+        lv: 5,
+        co: 'India'
+    }, // ── LEVEL 5 — SRI LANKA ──
+    {
+        n: 'Ranjan Ratnasingham',
+        r: 'Country Manager',
+        e: 'ranjan.ratnasingham@benline.com',
+        lv: 5,
+        co: 'Sri Lanka'
+    }, // ── LEVEL 5 — THAILAND ──
+    {
+        n: 'Nichamon Sithiponporn',
+        r: 'Country Manager',
+        e: 'nichamon.s@benline.com',
+        lv: 5,
+        co: 'Thailand'
+    }, {
+        n: 'Narumon Ponganuwat',
+        r: 'Country HR Manager',
+        e: 'narumon.p@benline.com',
+        lv: 5,
+        co: 'Thailand'
+    }, // ── LEVEL 5 — CAMBODIA ──
+    {
+        n: 'Salin Eam',
+        r: 'Country Manager',
+        e: 'salin.eam@benline.com',
+        lv: 5,
+        co: 'Cambodia'
+    }, // ── LEVEL 5 — PHILIPPINES ──
+    {
+        n: 'Ruby Jean Cristobal',
+        r: 'Country Manager',
+        e: 'ruby.cristobal@benline.com',
+        lv: 5,
+        co: 'Philippines'
+    }, {
+        n: 'Vincente Alcuran',
+        r: 'Country HR Manager',
+        e: 'vincente.alcuran@benline.com',
+        lv: 5,
+        co: 'Philippines'
+    }, // ── LEVEL 5 — VIETNAM ──
+    {
+        n: 'Nhung Nguyen',
+        r: 'Country Manager',
+        e: 'nhung.nyugen@benline.com',
+        lv: 5,
+        co: 'Vietnam'
+    }, {
+        n: 'An Le Thi Binh',
+        r: 'Country HR Manager',
+        e: 'binhan.le@benline.com',
+        lv: 5,
+        co: 'Vietnam'
+    }, // ── LEVEL 5 — MALAYSIA ──
+    {
+        n: 'Ricky Leung',
+        r: 'Country Manager',
+        e: 'ricky.leung@benline.com',
+        lv: 5,
+        co: 'Malaysia'
+    }, {
+        n: 'Nurul Jamari',
+        r: 'Country HR Manager',
+        e: 'nurul.jamari@benline.com',
+        lv: 5,
+        co: 'Malaysia'
+    }, // ── LEVEL 5 — BANGLADESH ──
+    {
+        n: 'Anikul Shuvo',
+        r: 'Country Manager',
+        e: 'anikul@benline.com',
+        lv: 5,
+        co: 'Bangladesh'
+    }, // ── LEVEL 5 — AUSTRALIA ──
+    {
+        n: 'Nick Wright',
+        r: 'Country Manager',
+        e: 'nick.wright@benline.com',
+        lv: 5,
+        co: 'Australia'
+    }, // ── LEVEL 5 — MYANMAR ──
+    {
+        n: 'Theint Theint Thu',
+        r: 'Country Manager',
+        e: 'theinttheint.thu@benline.com',
+        lv: 5,
+        co: 'Myanmar'
+    }, // ── LEVEL 5 — BRUNEI ──
+    {
+        n: 'Saw Tin Goh',
+        r: 'Country Manager',
+        e: 'sawtin.goh@benline.com',
+        lv: 5,
+        co: 'Brunei'
+    }, // ── LEVEL 5 — HONG KONG (Therry) ──
+    {
+        n: 'Therry Van Vreden',
+        r: 'Country Manager',
+        e: 'therry.vanvreden@benline.com',
+        lv: 5,
+        co: 'Hong Kong (Legal)'
+    }, // ── LEVEL 5 — ASHLEY (AU) ──
+    {
+        n: 'Ashley Cage',
+        r: 'Country Finance Manager',
+        e: 'ashley.cage@benline.com',
+        lv: 5,
+        co: 'Australia'
+    }, ];
+
+    // ── HELPERS ──
+    const isInf = t => ['Inform', 'Scope Inform', 'Inform & Consult', 'Scope Inform & Consult'].includes(t);
+    const isApv = t => !isInf(t);
+    let me = JSON.parse(localStorage.getItem('doa_me') || 'null');
+    let reqs = JSON.parse(localStorage.getItem('doa_reqs') || '[]');
+    let mf = {
+        s: '',
+        a: '',
+        t: ''
+    };
+    let rf = {
+        s: '',
+        st: ''
+    };
+    function ini(n) {
+        return (n || '?').split(' ').map(x => x[0]).join('').substring(0, 2).toUpperCase()
+    }
+    function now() {
+        return new Date().toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+    }
+    function save() {
+        localStorage.setItem('doa_reqs', JSON.stringify(reqs))
+    }
+    function tc(t) {
+        if (t === 'Approval' || t === 'Multiple Approval')
+            return 'bb';
+        if (t === 'Scope Approval')
+            return 'bp';
+        if (t === 'Inform' || t === 'Scope Inform')
+            return 'bgr';
+        return 'bw'
+    }
+    function getCon(role, country) {
+        if (country) {
+            const c = CONS.find(x => x.r === role && x.co === country);
+            if (c)
+                return c
+        }
+        return CONS.find(x => x.r === role) || {
+            n: role,
+            e: 'unknown@benline.com'
+        }
+    }
+    function getActiveLv(req) {
+        // Get ALL levels that have any approver (approval or inform)
+        const allLvs = [...new Set(req.apvs.map(a => a.lv))].sort( (a, b) => b - a);
+        for (const lv of allLvs) {
+            const apvRows = req.apvs.filter(a => a.lv === lv && isApv(a.t));
+            const infRows = req.apvs.filter(a => a.lv === lv && isInf(a.t));
+            const apvDone = apvRows.every(a => a.st === 'Approved' || a.st === 'Rejected');
+            const infDone = infRows.every(a => a.st === 'Notified');
+            if (!apvDone || !infDone)
+                return lv;
+        }
+        return null
+    }
+    function doLogin() {
+        const n = document.getElementById('ln').value.trim()
+          , e = document.getElementById('le').value.trim()
+          , co = document.getElementById('lc2').value;
+        if (!n || !e) {
+            alert('Please enter your name and email');
+            return
+        }
+        me = {
+            n,
+            e,
+            co
+        };
+        localStorage.setItem('doa_me', JSON.stringify(me));
+        initApp();
+    }
+    function initApp() {
+        document.getElementById('lov').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+        document.getElementById('suname').textContent = me.n;
+        document.getElementById('suemail').textContent = me.e;
+        document.getElementById('greet').textContent = 'Good day, ' + me.n.split(' ')[0];
+        document.getElementById('rname').value = me.n;
+        document.getElementById('remail').value = me.e;
+        if (me.co)
+            document.getElementById('rcountry').value = me.co;
+        initDDs();
+        renderAll();
+    }
+    window.onload = () => {
+        if (me)
+            initApp()
+    }
+    ;
+    function go(id, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.ni').forEach(n => n.classList.remove('active'));
+        document.getElementById('page-' + id).classList.add('active');
+        if (el)
+            el.classList.add('active');
+    }
+    function initDDs() {}
+    function onScope() {
+        const scope = document.getElementById('sscope').value;
+        const s = document.getElementById('sarea');
+        s.innerHTML = '<option value="">Select functional area</option>';
+        s.disabled = !scope;
+        document.getElementById('scat').innerHTML = '<option value="">— select area first —</option>';
+        document.getElementById('scat').disabled = true;
+        document.getElementById('ssub').innerHTML = '<option value="">— select category first —</option>';
+        document.getElementById('ssub').disabled = true;
+        document.getElementById('amap').style.display = 'none';
+        if (!scope)
+            return;
+        [...new Set(DOA.map(r => r.a))].sort().forEach(a => {
+            const o = document.createElement('option');
+            o.value = a;
+            o.textContent = a;
+            s.appendChild(o)
+        }
+        );
+    }
+    function onArea() {
+        const area = document.getElementById('sarea').value;
+        const cs = document.getElementById('scat');
+        cs.innerHTML = '<option value="">Select category</option>';
+        cs.disabled = !area;
+        document.getElementById('ssub').innerHTML = '<option value="">Select sub-category</option>';
+        document.getElementById('ssub').disabled = true;
+        document.getElementById('amap').style.display = 'none';
+        if (!area)
+            return;
+        [...new Set(DOA.filter(r => r.a === area).map(r => r.c))].sort().forEach(c => {
+            const o = document.createElement('option');
+            o.value = c;
+            o.textContent = c;
+            cs.appendChild(o)
+        }
+        );
+    }
+    function onCat() {
+        const area = document.getElementById('sarea').value
+          , cat = document.getElementById('scat').value;
+        const ss = document.getElementById('ssub');
+        ss.innerHTML = '<option value="">Select sub-category / action</option>';
+        ss.disabled = !cat;
+        document.getElementById('amap').style.display = 'none';
+        if (!cat)
+            return;
+        [...new Set(DOA.filter(r => r.a === area && r.c === cat).map(r => r.s))].sort().forEach(s => {
+            const o = document.createElement('option');
+            o.value = s;
+            o.textContent = s;
+            ss.appendChild(o)
+        }
+        );
+    }
+    function onSub() {
+        const area = document.getElementById('sarea').value
+          , cat = document.getElementById('scat').value
+          , sub = document.getElementById('ssub').value;
+        const md = document.getElementById('amap');
+        if (!sub) {
+            md.style.display = 'none';
+            return
+        }
+        const rules = DOA.filter(r => r.a === area && r.c === cat && r.s === sub);
+        if (!rules.length) {
+            md.style.display = 'none';
+            return
+        }
+        md.style.display = 'block';
+        const byLv = {};
+        rules.forEach(r => {
+            byLv[r.lv] = byLv[r.lv] || [];
+            byLv[r.lv].push(r)
+        }
+        );
+        const lvN = {
+            1: 'Level 1 — Board',
+            2: 'Level 2 — Executive',
+            3: 'Level 3 — Product (MAS/Liner)',
+            4: 'Level 4 — Functions',
+            5: 'Level 5 — Country'
+        };
+        let html = ''
+          , ti = 0;
+        Object.keys(byLv).sort( (a, b) => b - a).forEach(lv => {
+            const rows = byLv[lv]
+              , hasA = rows.some(r => isApv(r.t));
+            html += `<div class="lg"><div class="ll"><span class="badge bgr" style="font-size:9px">L${lv}</span>${lvN[lv] || 'Level ' + lv} ${hasA ? '<span class="badge bb" style="font-size:8px">APPROVAL REQUIRED</span>' : '<span class="badge bw" style="font-size:8px">INFORM ONLY</span>'}</div>`;
+            rows.forEach(r => {
+                const co = getCon(r.r, document.getElementById('rcountry').value);
+                html += `<div class="ar"><div><div style="font-size:11px;font-weight:500">${r.r}${co.n && co.n !== r.r ? ` <span style="color:var(--tx3);font-weight:400;font-size:10px">(${co.n})</span>` : ''}</div><div style="font-size:10px;color:var(--tx3)">✉ ${co.e || ''}</div></div><span class="badge ${tc(r.t)}">${r.t}</span></div>`;
+                ti++;
+            }
+            );
+            html += '</div>';
+        }
+        );
+        document.getElementById('alvls').innerHTML = html;
+    }
+    function submitReq() {
+        const n = document.getElementById('rname').value.trim() || me.n;
+        const e = document.getElementById('remail').value.trim() || me.e;
+        const co = document.getElementById('rcountry').value;
+        const scope = (document.getElementById('sscope') || {
+            value: ''
+        }).value;
+        const area = document.getElementById('sarea').value
+          , cat = document.getElementById('scat').value
+          , sub = document.getElementById('ssub').value;
+        const purpose = document.getElementById('rpurpose').value.trim();
+        if (!area || !cat || !sub) {
+            showT('Please complete all selections');
+            return
+        }
+        if (!purpose) {
+            showT('Please add a purpose / justification');
+            return
+        }
+        const rules = DOA.filter(r => r.a === area && r.c === cat && r.s === sub);
+        const apvs = rules.map(r => {
+            const c = getCon(r.r, co);
+            return {
+                lv: r.lv,
+                r: r.r,
+                t: r.t,
+                n: c.n,
+                re: c.e,
+                st: 'Pending',
+                sent: false,
+                at: null,
+                cm: ''
+            }
+        }
+        );
+        const req = {
+            id: 'R' + Date.now(),
+            sb: n,
+            se: e,
+            co,
+            scope,
+            area,
+            cat,
+            sub,
+            purpose,
+            apvs,
+            status: 'In Progress',
+            dt: now(),
+            notes: []
+        };
+        reqs.unshift(req);
+        save();
+        clearForm();
+        renderAll();
+        showT('Request submitted successfully');
+        document.querySelectorAll('.ni')[2].classList.add('active');
+        go('reqs');
+        setTimeout( () => openModal(req.id), 200);
+    }
+    function clearForm() {
+        document.getElementById('sscope').value = '';
+        document.getElementById('sarea').innerHTML = '<option value="">— select scope first —</option>';
+        document.getElementById('sarea').disabled = true;
+        document.getElementById('scat').innerHTML = '<option value="">— select area first —</option>';
+        document.getElementById('scat').disabled = true;
+        document.getElementById('ssub').innerHTML = '<option value="">— select category first —</option>';
+        document.getElementById('ssub').disabled = true;
+        document.getElementById('rpurpose').value = '';
+        document.getElementById('amap').style.display = 'none';
+    }
+    function renderAll() {
+        renderDash();
+        renderReqs();
+        renderMatrix();
+        renderCons();
+        updateBadges()
+    }
+    function updateBadges() {
+        const op = reqs.filter(r => r.status === 'In Progress').length;
+        const bo = document.getElementById('bopen');
+        bo.textContent = op;
+        bo.style.display = op ? 'inline-block' : 'none';
+    }
+    function renderDash() {
+        const op = reqs.filter(r => r.sb === me?.n && r.status === 'In Progress').length;
+        const pe = reqs.reduce( (n, r) => n + r.apvs.filter(a => a.st === 'Pending' && isApv(a.t)).length, 0);
+        const dn = reqs.filter(r => r.status === 'Approved').length;
+        document.getElementById('st1').textContent = op;
+        document.getElementById('st2').textContent = pe;
+        document.getElementById('st4').textContent = dn;
+        const el = document.getElementById('dash-list');
+        if (!reqs.length) {
+            el.innerHTML = '<div class="es">No requests yet. Click <strong>New Request</strong> to start.</div>';
+            return
+        }
+        el.innerHTML = reqs.slice(0, 5).map(r => rrow(r)).join('');
+    }
+    function rrow(r) {
+        const apvs = r.apvs.filter(a => isApv(a.t));
+        const dn = apvs.filter(a => a.st === 'Approved').length;
+        const isRej = r.status === 'Rejected' || apvs.some(a => a.st === 'Rejected');
+        const pct = apvs.length ? Math.round(dn / apvs.length * 100) : 0;
+        const alv = getActiveLv(r);
+        const bc = r.status === 'Approved' ? 'bg' : r.status === 'Rejected' ? 'br' : 'bw';
+        const barColor = isRej ? '#c0392b' : r.status === 'Approved' ? 'var(--gr)' : 'var(--gr)';
+        const rejNote = isRej ? `<div style="font-size:10px;color:var(--rd);margin-top:3px;font-weight:500">Rejected — process stopped</div>` : '';
+        return `<div class="rrow" onclick="openModal('${r.id}')">
+    <div class="rt"><span class="rtitle">${r.sub}</span><span class="badge ${bc}">${r.status}</span>${alv ? `<span class="badge bgr" style="font-size:9px">Active L${alv}</span>` : ''}</div>
+    <div class="rm">${r.scope ? r.scope + ' | ' : ''} ${r.area} / ${r.cat} · ${r.dt} · ${r.sb}</div>
+    <div class="pb"><div class="pf" style="width:${pct}%;background:${barColor}"></div></div>
+    ${rejNote}
+    ${!isRej ? `<div style="font-size:10px;color:var(--tx3);margin-top:3px">${dn}/${apvs.length} approvals · ${apvs.filter(a => a.st === 'Pending').length} pending</div>` : ''}
+  </div>`;
+    }
+    function renderReqs() {
+        let rs = reqs.filter(r => r.sb === me?.n || r.se === me?.e);
+        if (rf.s)
+            rs = rs.filter(r => (r.sub + r.area + r.id).toLowerCase().includes(rf.s.toLowerCase()));
+        if (rf.st)
+            rs = rs.filter(r => r.status === rf.st);
+        document.getElementById('reqs-list').innerHTML = rs.length ? rs.map(r => rrow(r)).join('') : '<div class="es">No requests found. Submit a new request to get started.</div>';
+    }
+
+    function openModal(id) {
+        const r = reqs.find(x => x.id === id);
+        if (!r)
+            return;
+        const alv = getActiveLv(r);
+        const byLv = {};
+        r.apvs.forEach(a => {
+            byLv[a.lv] = byLv[a.lv] || [];
+            byLv[a.lv].push(a)
+        }
+        );
+        const lvN = {
+            1: 'Board',
+            2: 'Executive',
+            3: 'Product — MAS/Liner',
+            4: 'Functions',
+            5: 'Country'
+        };
+        const apvLvs = [...new Set(r.apvs.filter(a => isApv(a.t)).map(a => a.lv))].sort( (a, b) => b - a);
+        const seqH = apvLvs.map( (lv, i) => {
+            const at = r.apvs.filter(a => a.lv === lv && isApv(a.t));
+            const dn = at.every(a => a.st === 'Approved')
+              , rj = at.some(a => a.st === 'Rejected');
+            return `${i > 0 ? '<span class="sa">→</span>' : ''}<span class="ss ${rj ? 'rej' : dn ? 'don' : lv === alv ? 'act' : ''}">L${lv} ${rj ? '✗' : dn ? '✓' : lv === alv ? '▶' : '⏳'}</span>`;
+        }
+        ).join('');
+        const actPe = alv ? r.apvs.filter(a => a.lv === alv && a.st === 'Pending') : [];
+        const isSubmitter2 = r.sb === me?.n || r.se === me?.e;
+        const sendBtn = '';
+        let lvH = '';
+        Object.keys(byLv).sort( (a, b) => b - a).forEach(lv => {
+            const rows = byLv[lv]
+              , lvN2 = parseInt(lv);
+            const apR = rows.filter(a => isApv(a.t))
+              , inR = rows.filter(a => isInf(a.t));
+            const isSubmitter = r.sb === me?.n || r.se === me?.e;
+            const isLk = alv !== null && lvN2 < alv;
+            const isAct = apR.length > 0 && (r.status === 'In Progress' || r.status === 'Rejected') && !isLk;
+            const lvDn = apR.length && apR.every(a => a.st === 'Approved' || a.st === 'Rejected');
+            const lvRj = apR.some(a => a.st === 'Rejected');
+            if (apR.length) {
+                lvH += `<div class="ml"><div class="mlh"><span class="badge ${lvRj ? 'br' : lvDn ? 'bg' : isAct ? 'bw' : 'bgr'}" style="font-size:9px">L${lv}</span>${lvN[lv] || 'L' + lv}${isLk ? ` <span style="font-size:9px;color:var(--tx3)">🔒 Locked — Level ${lvN2 + 1} must complete first</span>` : ''}${isAct && !lvDn ? ' <span style="font-size:9px;color:var(--am)">▶ Active — send emails now</span>' : ''}</div>`;
+                apR.forEach(a => {
+                    const sc = a.st === 'Approved' ? 'bg' : a.st === 'Rejected' ? 'br' : a.st === 'Blocked' ? 'bgr' : a.st === 'Email Sent' ? 'bt' : a.st === 'Notified' ? 'bg' : 'bgr';
+                    lvH += `<div class="ma"><div class="mal"><div class="man">${a.r}${a.n && a.n !== a.r ? ` <span style="color:var(--tx3);font-size:10px;font-weight:400">(${a.n})</span>` : ''}</div><div class="mae">✉ ${a.re}</div>${a.cm ? `<div style="font-size:10px;color:var(--tx2);font-style:italic;margin-top:2px">"${a.cm}"</div>` : ''}</div><div class="maa"><span class="badge ${sc}">${a.st}</span>${(isAct || isSubmitter) && alv === lvN2 && r.status === 'In Progress' && a.st === 'Pending' ? `<button class="btn btn-em" onclick="sendOne('${id}','${a.r}')">✉ Send</button>` : ''} ${a.st === 'Email Sent' && r.status === 'In Progress' && a.st !== 'Blocked' ? `<button class="btn" style="padding:3px 8px;font-size:10px;border-color:#7a4f00;color:var(--am)" onclick="sendReminder('${id}','${a.r}')">↩ Remind</button>` : ''}${isAct && a.st !== 'Blocked' ? `
+        <button class="btn btn-ok btn-sm ${a.st === 'Approved' ? 'selected' : ''}"
+          onclick="decide('${id}','${a.r}','Approved')" style="padding:3px 9px;font-size:10px">
+          ${a.st === 'Approved' ? '✓ Approved' : '✓ Approve'}
+        </button>
+        <button class="btn btn-no btn-sm ${a.st === 'Rejected' ? 'selected' : ''}"
+          onclick="decide('${id}','${a.r}','Rejected')" style="padding:3px 9px;font-size:10px">
+          ${a.st === 'Rejected' ? '✗ Rejected' : '✗ Reject'}
+        </button>
+      ` : ''}</div></div>`;
+                }
+                );
+                lvH += '</div>';
+            }
+            inR.forEach(a => {
+                lvH += `<div class="minf"><span class="badge bgr" style="font-size:9px;margin-right:5px">L${lv}</span><span class="badge bw" style="font-size:9px;margin-right:5px">${a.t}</span><span style="font-size:9px;color:var(--tx3)">— notify only, no approval needed</span> <strong>${a.r}</strong>${a.n && a.n !== a.r ? ` (${a.n})` : ''} <span style="color:var(--tx3);font-size:10px">· ✉ ${a.re}</span> ${a.st === 'Pending' && r.status !== 'Rejected' && lvN2 >= alv ? `<button class="btn btn-em" style="margin-left:6px" onclick="sendOne('${id}','${a.r}')">✉ Notify</button>` : (a.st === 'Blocked' ? '<span style="color:var(--tx3);margin-left:6px;font-size:10px">🔒 Blocked</span>' : (a.st === 'Notified' ? '<span style="color:var(--gr);margin-left:6px;font-size:10px">✓ Notified</span>' : '<span style="color:var(--tx3);margin-left:6px;font-size:10px">🔒 Locked</span>'))}</div>`;
+            }
+            );
+        }
+        );
+        const thrH = r.notes.map(nt => `<div class="tm"><div class="tav">${ini(nt.f)}</div><div class="tb ${nt.f === me?.n ? 'mine' : ''}"><div class="tw">${nt.f}</div><div class="tt">${nt.x}</div><div class="ti">${nt.at}</div></div></div>`).join('') || '<div style="font-size:11px;color:var(--tx3)">No notes yet.</div>';
+        document.getElementById('mb').innerHTML = `<h3>${r.sub}</h3><div class="mm">${r.scope ? r.scope + ' | ' : ''} ${r.area} / ${r.cat} · <strong>${r.status}</strong> · ${r.dt} by ${r.sb}</div>${r.purpose ? `<div style="background:var(--sur2);border-radius:var(--rs);padding:8px 11px;font-size:12px;color:var(--tx2);margin-bottom:12px"><strong>Purpose:</strong> ${r.purpose}${r.attach ? `<div style='margin-top:6px;font-size:11px'><strong>📎 Attachments:</strong> ${r.attach} <span style='color:var(--tx3)'>(attach manually in Outlook)</span></div>` : ''}</div>` : ''}<div style="margin-bottom:12px"><div style="font-size:9px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Approval sequence — level by level</div><div class="seq">${seqH || '<span class="badge bg">No sequential approvals</span>'}</div></div>${sendBtn}${lvH}<div class="thr"><div class="tht">Notes & activity</div>${thrH}<div class="rb"><textarea id="ntxt-${id}" placeholder="Add a note, record a response, log an update..."></textarea><div class="ras"><button class="btn btn-p" style="padding:5px 11px;font-size:11px" onclick="addNote('${id}')">Add note</button>${(r.sb === me?.n || r.se === me?.e) ? `<button class="btn btn-no" style="padding:5px 10px;font-size:11px" onclick="deleteReq('${id}')">🗑 Delete request</button>` : ''}<button class="btn" style="padding:5px 10px;font-size:11px" onclick="closeMo()">Close</button></div></div></div>`;
+        document.getElementById('mo').classList.add('open');
+    }
+    function sendOne(reqId, role) {
+        const r = reqs.find(x => x.id === reqId)
+          , a = r.apvs.find(x => x.r === role);
+        if (!a)
+            return;
+        const alv = getActiveLv(r);
+        if (isApv(a.t) && a.lv !== alv) {
+            showT('Cannot send — Level ' + (alv || a.lv) + ' must complete first');
+            return
+        }
+        const to = a.re;
+        const subj = encodeURIComponent(`[DOA ${isInf(a.t) ? 'NOTIFY' : 'ACTION REQUIRED'}] ${r.sub}`);
+        const isInfType = isInf(a.t);
+        const body = encodeURIComponent(`Dear ${a.n || a.r},\n\n${isInfType ? `This email is to notify you of the following action under the Ben Line Delegation of Authority policy.\n\nNo formal approval is required from you${a.t.includes('Consult') ? ' — your input and comments are welcome.' : '. No action needed.'}` : `I am writing to request your ${a.t} for the following action under the Ben Line Delegation of Authority policy.`}\n\n────────────────────────────\nACTION:     ${r.sub}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co || 'Group'}\n────────────────────────────\nPURPOSE / JUSTIFICATION:\n ${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\nYOUR ROLE:  ${a.r}\nACTION:     ${a.t}\n────────────────────────────\n\n ${isInfType ? `No further action required from you.` : `Please reply to this email with your response.`}\n\nThank you,\n ${r.sb}`);
+        const mailUrl = `mailto:${to}?subject=${subj}&body=${body}`;
+        window.open(mailUrl);
+        // Also copy subject+body to clipboard as backup
+        try {
+            navigator.clipboard.writeText(decodeURIComponent(body))
+        } catch (e) {}
+        a.sent = true;
+        if (a.st === 'Pending')
+            a.st = isInf(a.t) ? 'Notified' : 'Email Sent';
+        r.notes.push({
+            f: 'System',
+            x: `Email sent to ${a.r} (${a.re})`,
+            at: now()
+        });
+        save();
+        renderAll();
+        openModal(reqId);
+        showT('Email opened for ' + a.r);
+    }
+    function sendAll(reqId) {
+        const r = reqs.find(x => x.id === reqId)
+          , alv = getActiveLv(r);
+        if (!alv)
+            return;
+        const pe = r.apvs.filter(a => a.lv === alv && a.st === 'Pending');
+        if (!pe.length) {
+            showT('No pending at this level');
+            return
+        }
+        const to = a.re;
+        const subj = encodeURIComponent(`[DOA Level ${alv} — ${hasApvReq ? 'ACTION REQUIRED' : 'NOTIFY'}] ${r.sub}`);
+        const lines = pe.map(a => `  • ${a.r}${a.n && a.n !== a.r ? ' (' + a.n + ')' : ''}
+    Action required: ${a.t}${isInf(a.t) ? ' (notify only — no formal approval needed)' : ' (formal approval required)'}`).join('\n');
+        const hasInfOnly = pe.every(a => isInf(a.t));
+        const hasApvReq = pe.some(a => isApv(a.t));
+        const body = encodeURIComponent(`Dear colleagues,\n\n${hasInfOnly ? `This email is to notify you of the following action under the Ben Line Delegation of Authority policy. No formal approval is required.` : `I am writing to request your approval for the following action under the Ben Line Delegation of Authority policy.`}\n\n────────────────────────────\nACTION:     ${r.sub}\nAREA:       ${r.area} / ${r.cat}\nSUBMITTED:  ${r.sb}  |  ${r.dt}\nCOUNTRY:    ${r.co || 'Group'}\n────────────────────────────\nROLES IN THIS REQUEST:\n ${lines}\n\nPURPOSE / JUSTIFICATION:\n ${r.purpose}\n\nPlease find the supporting documents attached.\n────────────────────────────\n\n ${hasApvReq ? `Please reply to this email with your response.\n\nFor those marked Inform / Consult only: no action needed.` : `No action required.`}\n\nThank you,\n ${r.sb}`);
+        const mailUrl2 = `mailto:${to}?subject=${subj}&body=${body}`;
+        window.open(mailUrl2);
+        try {
+            navigator.clipboard.writeText(decodeURIComponent(body))
+        } catch (e) {}
+        pe.forEach(a => {
+            a.st = 'Email Sent';
+            a.sent = true
+        }
+        );
+        r.notes.push({
+            f: 'System',
+            x: `Level ${alv} emails sent to: ${pe.map(a => a.r).join(', ')}`,
+            at: now()
+        });
+        save();
+        renderAll();
+        openModal(reqId);
+        showT('Level ' + alv + ' emails opened');
+    }
+    function decide(reqId, role, dec) {
+        const cm = dec === 'Rejected' ? prompt(`Reason for rejection (optional):`) || '' : null;
+        if (cm === null && dec === 'Rejected' && cm !== '') {}
+        // allow empty
+        const r = reqs.find(x => x.id === reqId)
+          , a = r.apvs.find(x => x.r === role);
+        if (!a)
+            return;
+        // Allow toggling: if already set to this decision, undo it back to Email Sent
+        if (a.st === dec) {
+            // Undo: clear this decision
+            a.st = 'Pending';
+            a.cm = '';
+            a.at = null;
+            // If undoing a rejection, restore all Blocked approvers to Email Sent and restore request status
+            if (dec === 'Rejected') {
+                r.apvs.forEach(x => {
+                    if (x.st === 'Blocked')
+                        x.st = 'Pending';
+                }
+                );
+                r.status = 'In Progress';
+            }
+            // If undoing an approval, recalculate status
+            if (dec === 'Approved')
+                r.status = 'In Progress';
+            r.notes.push({
+                f: me?.n || 'User',
+                x: `Decision cleared for ${role}`,
+                at: now()
+            });
+            save();
+            renderAll();
+            openModal(reqId);
+            showT('Decision cleared — ' + role + ' reset to pending');
+            return;
+        }
+        // If changing FROM Blocked to a decision, restore request to In Progress first
+        if (a.st === 'Blocked' || r.status === 'Rejected') {
+            r.status = 'In Progress';
+            r.apvs.forEach(x => {
+                if (x.st === 'Blocked')
+                    x.st = 'Pending';
+            }
+            );
+        }
+        a.st = dec;
+        a.cm = cm || '';
+        a.at = now();
+        r.notes.push({
+            f: role,
+            x: `${dec}${cm ? ': ' + cm : ''}`,
+            at: now()
+        });
+        const lv = a.lv
+          , atLv = r.apvs.filter(x => x.lv === lv && isApv(x.t));
+        const allDn = atLv.every(x => x.st === 'Approved' || x.st === 'Rejected');
+        const anyRj = atLv.some(x => x.st === 'Rejected');
+        if (anyRj) {
+            r.status = 'Rejected';
+            // Block all OTHER approvers (not the one who rejected) at same + higher levels
+            r.apvs.forEach(x => {
+                if (x.r !== role && (x.st === 'Pending' || x.st === 'Email Sent'))
+                    x.st = 'Blocked';
+            }
+            );
+            r.notes.push({
+                f: 'System',
+                x: `Rejected at Level ${lv} by ${role}. Other approvals blocked.`,
+                at: now()
+            });
+        } else if (allDn) {
+            const nxt = getActiveLv(r);
+            if (nxt === null) {
+                r.status = 'Approved';
+                r.notes.push({
+                    f: 'System',
+                    x: '✅ All approvals collected. Request fully approved.',
+                    at: now()
+                })
+            } else {
+                r.notes.push({
+                    f: 'System',
+                    x: `✅ Level ${lv} complete. Level ${nxt} now active — send Level ${nxt} emails now.`,
+                    at: now()
+                })
+            }
+        }
+        save();
+        renderAll();
+        openModal(reqId);
+        showT(role + ' — ' + dec);
+    }
+    function addNote(reqId) {
+        const r = reqs.find(x => x.id === reqId)
+          , txt = document.getElementById('ntxt-' + reqId).value.trim();
+        if (!txt)
+            return;
+        r.notes.push({
+            f: me?.n || 'User',
+            x: txt,
+            at: now()
+        });
+        save();
+        openModal(reqId);
+    }
+    function closeR(reqId, st) {
+        const r = reqs.find(x => x.id === reqId);
+        r.status = st;
+        r.notes.push({
+            f: me?.n || 'User',
+            x: 'Manually marked as ' + st,
+            at: now()
+        });
+        save();
+        renderAll();
+        openModal(reqId);
+        showT('Marked as ' + st);
+    }
+    function deleteReq(reqId) {
+        if (!confirm('Delete this request? This cannot be undone.'))
+            return;
+        reqs = reqs.filter(x => x.id !== reqId);
+        save();
+        renderAll();
+        closeMo();
+        showT('Request deleted');
+    }
+    function renderMatrix() {
+        let rows = DOA;
+        if (mf.s)
+            rows = rows.filter(r => Object.values(r).join(' ').toLowerCase().includes(mf.s.toLowerCase()));
+        if (mf.a)
+            rows = rows.filter(r => r.a === mf.a);
+        if (mf.t)
+            rows = rows.filter(r => r.t === mf.t);
+        const lvN = {
+            1: 'L1 Board',
+            2: 'L2 Executive',
+            3: 'L3 Product',
+            4: 'L4 Function',
+            5: 'L5 Country'
+        };
+        document.getElementById('mtbl-body').innerHTML = rows.map(r => `<tr><td><span class="badge bgr" style="font-size:9px">${r.a}</span></td><td style="font-size:11px">${r.c}</td><td style="font-size:11px;max-width:240px">${r.s}</td><td style="font-size:10px;font-weight:500;color:var(--tx2)">${lvN[r.lv] || r.lv}</td><td style="font-size:11px;font-weight:500">${r.r}</td><td><span class="badge ${tc(r.t)}" style="font-size:9px">${r.t}</span></td></tr>`).join('') || '<tr><td colspan="6" class="es">No results.</td></tr>';
+    }
+    function fMtx(v) {
+        mf.s = v;
+        renderMatrix()
+    }
+    function fMtxA(v) {
+        mf.a = v;
+        renderMatrix()
+    }
+    function fMtxT(v) {
+        mf.t = v;
+        renderMatrix()
+    }
+    function renderCons() {
+        const lt = {
+            1: 'tl1',
+            2: 'tl2',
+            3: 'tl3',
+            4: 'tl4',
+            5: 'tl5'
+        };
+        const ll = {
+            1: 'Level 1 — Board',
+            2: 'Level 2 — Executive',
+            3: 'Level 3 — Product',
+            4: 'Level 4 — Functions',
+            5: 'Level 5 — Country'
+        };
+        const byLv = {};
+        CONS.forEach(x => {
+            byLv[x.lv] = byLv[x.lv] || [];
+            byLv[x.lv].push(x);
+        }
+        );
+        let html = '';
+        [1, 2, 3, 4, 5].forEach(lv => {
+            if (!byLv[lv])
+                return;
+            html += `<div style="font-size:10px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 8px;padding-bottom:4px;border-bottom:.5px solid var(--bdr)">${ll[lv]}</div>`;
+            html += `<div class="cgrid">${byLv[lv].map(x => `<div class="cc"><div class="ci">${ini(x.n)}</div><div><div class="cn">${x.n}</div><div class="cr">${x.r}${x.co ? ' — ' + x.co : ''}</div><a class="ce" href="mailto:${x.e}">${x.e}</a><span class="tag ${lt[x.lv]}">${ll[x.lv]}</span></div></div>`).join('')}</div>`;
+        }
+        );
+        document.getElementById('con-grid').innerHTML = html;
+    }
+    function fReqs(v) {
+        rf.s = v;
+        renderReqs()
+    }
+    function fReqsSt(v) {
+        rf.st = v;
+        renderReqs()
+    }
+    function closeMo() {
+        document.getElementById('mo').classList.remove('open')
+    }
+    function closeMoBg(e) {
+        if (e.target === document.getElementById('mo'))
+            closeMo()
+    }
+    function showT(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout( () => t.classList.remove('show'), 2800)
+    }
+
+    function sendReminder(reqId, role) {
+        const r = reqs.find(x => x.id === reqId)
+          , a = r.apvs.find(x => x.r === role);
+        if (!a)
+            return;
+        const to = a.re;
+        const subj = encodeURIComponent(`[REMINDER — DOA] ${r.sub} — Pending your ${a.t}`);
+        const body = encodeURIComponent(`Dear ${a.n || a.r},
+
+This is a gentle reminder that your ${a.t} is still pending for the following action.
+
+────────────────────────────
+ACTION:     ${r.sub}
+AREA:       ${r.area} / ${r.cat}
+SUBMITTED:  ${r.sb}  |  ${r.dt}
+COUNTRY:    ${r.co || 'Group'}
+────────────────────────────
+PURPOSE / JUSTIFICATION:
+${r.purpose}
+
+Please find the supporting documents attached.
+────────────────────────────
+YOUR ROLE:  ${a.r}
+ACTION:     ${a.t}
+────────────────────────────
+
+Please reply to this email with your response.
+
+Thank you,
+${r.sb}`);
+        window.open(`mailto:${to}?subject=${subj}&body=${body}`);
+        r.notes.push({
+            f: 'System',
+            x: `Reminder sent to ${a.r}`,
+            at: now()
+        });
+        save();
+        renderAll();
+        openModal(reqId);
+        showT('Reminder sent to ' + a.r);
+    }
+    function clearAllData() {
+        if (!confirm("This will delete ALL your saved requests and log you out. Are you sure?"))
+            return;
+        localStorage.clear();
+        location.reload();
+    }
 </script>
-
-</body>
-</html>
-
-```
+</body></html>
